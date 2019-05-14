@@ -7,9 +7,6 @@ use App\User;
 
 class UserController extends Controller
 {
-    public function pruebas(Request $request) {
-        return "pruebas user";
-    }
 
     public function register(Request $request) {
         $json = $request->input('json',null);
@@ -33,7 +30,7 @@ class UserController extends Controller
                 );
             }else {
 
-                $pwd = password_hash($params_array['password'], PASSWORD_BCRYPT, ['cost' => 4]);
+                $pwd = hash('sha256',$params_array['password']);
                 $user = new User();
                 $user->username = $params_array['username'];
                 $user->email = $params_array['email'];
@@ -54,15 +51,49 @@ class UserController extends Controller
                 'message' => 'The data sent is not correct',
             );
         }
-        // Cifrar contraseña
-        // Controlar si el usuario existe
-        // Crear usuario
 
-        // Respuesta
         return response()->json($data, $data['code']);
     }
 
     public function login(Request $request) {
-        return "login user";
+        $jwtAuth = new \JwtAuth();
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array,[
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+        
+        if ($validate->fails()) {
+            $data = array(
+                'status' => 'error' ,
+                'code' => 404 ,
+                'message' => 'The user could not login',
+                'errors' => $validate->errors()
+            );
+        } else {
+            $pwd = hash('sha256',$params_array['password']);
+            $signUp = $jwtAuth->signUp($params_array['email'], $pwd);
+            if (!empty($params_array['getToken'])) {
+                $signUp = $jwtAuth->signUp($params_array['email'], $pwd, true);
+            }
+        }
+        return response()->json($signUp, 200);
+    }
+    /**
+     * Actualizar los datos del usuario
+     */
+    public function update( Request $request) {
+        $token = $request->header(('Authorization'));
+        $jwtAuth = new \JwtAuth();
+        $checkToken = $jwtAuth->checkToken($token);
+
+        if ($checkToken) {
+            echo "login ok";
+        } else {
+            echo "login fail";
+        }
+        die();
     }
 }

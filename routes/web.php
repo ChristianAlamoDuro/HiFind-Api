@@ -13,3 +13,4 @@
 
 Route::post('/users/register', 'UserController@register');
 Route::post('/users/login', 'UserController@login');
+Route::post('/users/update', 'UserController@update');
