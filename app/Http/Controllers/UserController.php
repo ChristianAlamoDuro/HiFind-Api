@@ -64,9 +64,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        
         if ($validate->fails()) {
-            $data = array(
+            $signUp = array(
                 'status' => 'error' ,
                 'code' => 404 ,
                 'message' => 'The user could not login',

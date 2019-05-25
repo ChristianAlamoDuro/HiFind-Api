@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
     use Notifiable;
 
     /**
@@ -36,4 +37,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function marks_users()
+    {
+        return $this->belongsToMany('\App\Game', 'marks_users_games')->withPivot('game_id','mark');
+    }
 }

@@ -40,7 +40,8 @@ class JwtAuth {
                 'email'     =>      $user->email,
                 'username'  =>      $user->username,
                 'iat'       =>      time(),
-                'exp'       =>      time() + (43200)
+                'exp'       =>      time() + (43200),
+                'role'      =>      $user->role
             );
             /**
              * token --> JSON 
