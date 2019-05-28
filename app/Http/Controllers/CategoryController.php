@@ -11,7 +11,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-
         return response()->json([
             'code' => 200,
             'status' => 'succes',
@@ -22,7 +21,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::find($id);
-        
+
         if (is_object($category)) {
             $data = [
                 'code' => 200,
@@ -98,7 +97,7 @@ class CategoryController extends Controller
                 unset($params_array['id']);
                 unset($params_array['created_at']);
 
-                $category = Category::where('id',$id)->update($params_array);
+                $category = Category::where('id', $id)->update($params_array);
                 $data = [
                     'code' => 200,
                     'status' => 'succes',

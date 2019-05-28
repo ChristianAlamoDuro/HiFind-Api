@@ -27,6 +27,9 @@ Route::post('/users/update', 'UserController@update');
 
 #PUT /api/games/{id del juego}
 #En el body le pasas un json con los parametros a actualizar
-
+#GET /api/special_category_games/{nombre de la categoria especial que quieres que sea true a filtrar}
+#GET /api/category_games/{nombre de la categoria a filtrar}
 Route::resource('/api/categories', 'CategoryController');
 Route::resource('/api/games', 'GameController');
+Route::resource('/api/special_category_games','SpecialCategoryGameController');
+Route::resource('/api/category_games','CategoryGameController');

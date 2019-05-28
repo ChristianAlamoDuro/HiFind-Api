@@ -12,21 +12,25 @@ class GameController extends Controller
     {
         $data = [];
         $games = Game::all();
+        $data = [
+            'code' => 200,
+            'status' => 'succes',
+        ];
         foreach ($games as $game) {
             array_push($data, $this->build_show_response($game));
         }
-        return response()->json([
-            'code' => 200,
-            'status' => 'succes',
-            'Games' => $data
-        ]);
+        return response()->json($data);
     }
+
 
     public function show($name)
     {
         $games = Game::where('name', 'like', '%' . $name . '%')->get();
-        $data = [];
         if (!is_null($games)) {
+            $data = [
+                'code' => 200,
+                'status' => 'succes',
+            ];
             foreach ($games as $game) {
                 array_push($data, $this->build_show_response($game));
             }
@@ -147,16 +151,12 @@ class GameController extends Controller
             array_push($marks, $mark->pivot->mark);
         }
         return [
-            'code' => 200,
-            'status' => 'succes',
-            'game' => [
-                'name' => $game->name,
-                'sinopsis' => $game->sinopsis,
-                'out_date' => $game->out_date, 'public_directed' => $game->public_directed, 'duration' => $game->duration,
-                'image' => $game->image,
-                'categories' => $categories,
-                'marks' => $marks
-            ]
+            'name' => $game->name,
+            'sinopsis' => $game->sinopsis,
+            'out_date' => $game->out_date, 'public_directed' => $game->public_directed, 'duration' => $game->duration,
+            'image' => $game->image,
+            'categories' => $categories,
+            'marks' => $marks
         ];
     }
 }
