@@ -12,36 +12,44 @@ class GameController extends Controller
     {
         $data = [];
         $games = Game::all();
+        foreach ($games as $game) {
+            array_push($data, $this->build_show_response($game));
+        }
+        $dataResponse = [
+            'code' => 200,
+            'status' => 'succes',
+            'games'=>$data
+        ];
         $data = [
             'code' => 200,
             'status' => 'succes',
         ];
-        foreach ($games as $game) {
-            array_push($data, $this->build_show_response($game));
-        }
-        return response()->json($data);
+       
+        return response()->json($dataResponse);
     }
 
 
     public function show($name)
     {
         $games = Game::where('name', 'like', '%' . $name . '%')->get();
+        $data=[];
         if (!is_null($games)) {
-            $data = [
-                'code' => 200,
-                'status' => 'succes',
-            ];
             foreach ($games as $game) {
                 array_push($data, $this->build_show_response($game));
             }
+            $dataResponse = [
+                'code' => 200,
+                'status' => 'succes',
+                'games'=>$data
+            ];
         } else {
-            $data = [
+            $dataResponse = [
                 'code' => 404,
                 'status' => 'error',
                 'message' => 'game not found'
             ];
         }
-        return response()->json($data);
+        return response()->json($dataResponse);
     }
 
     public function store(Request $request)
@@ -57,7 +65,8 @@ class GameController extends Controller
                 'public_directed' => 'required',
                 'duration' => 'required',
                 'sinopsis' => 'required',
-                'image' => 'required'
+                'image' => 'required',
+                'categories' => 'required'
             ]);
 
             if ($validate->fails()) {
