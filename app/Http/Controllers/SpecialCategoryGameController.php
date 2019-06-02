@@ -14,17 +14,17 @@ class SpecialCategoryGameController extends Controller
     {
         $games = [];
         $categories = Category::where($name, true)->get();
-        foreach ($categories as $category) {
-            foreach ($category->games as $game) {
-                array_push($games, Game::find($game->id));
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                foreach ($category->games as $game) {
+                    array_push($games, Game::find($game->id));
+                }
             }
-        }
-        $games = array_unique($games);
-        if (!is_null($categories)) {
+            $games = array_unique($games);
             $data = [
                 'code' => 200,
                 'status' => 'succes',
-                $games
+                'Games' => $games
             ];
         } else {
             $data = [
