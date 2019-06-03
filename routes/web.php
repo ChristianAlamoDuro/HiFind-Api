@@ -16,6 +16,14 @@ Route::post('/users/register', 'UserController@register');
 Route::post('/users/login', 'UserController@login');
 Route::post('/users/update', 'UserController@update');
 
+#GET /api/categories
+#devuelve todas las categorias y su categoria especial
+#GET /api/categories/{id de categoria}
+#POST /api/categories/json={"name":"simuladores","special_category":"is_game"}
+
+Route::resource('/api/categories', 'CategoryController');
+
+
 #GET /api/games/
 #Ruta que devuelve todos los juegos
 
@@ -25,11 +33,14 @@ Route::post('/users/update', 'UserController@update');
 #POST /api/games
 #En el body un json con los valores ejemplo json={"name":"forza horizon 4","sinopsis":"juego de carreras to guapo","duration":"0","out_date":"2019-10-14 00:00:00","public_directed":"+16","image":"not found","categories":[1,2]}
 
+
 #PUT /api/games/{id del juego}
-#En el body le pasas un json con los parametros a actualizar
+Route::resource('/api/games', 'GameController');
+
 #GET /api/special_category_games/{nombre de la categoria especial que quieres que sea true a filtrar}
 #GET /api/category_games/{nombre de la categoria a filtrar}
-Route::resource('/api/categories', 'CategoryController');
-Route::resource('/api/games', 'GameController');
 Route::resource('/api/special_category_games','SpecialCategoryGameController');
 Route::resource('/api/category_games','CategoryGameController');
+
+#POST /api/mark_game/json={"mark":5,"game_id":2,"user_id":1}
+Route::resource('/api/mark_game', 'MarkGameController');

@@ -15,6 +15,11 @@ class Game extends Model
 
     public function marks_games()
     {
-        return $this->belongsToMany('\App\User','marks_users_games')->withPivot('user_id','mark');
+        return $this->belongsToMany('\App\User', 'marks_users_games')->withPivot('user_id', 'mark');
+    }
+
+    public function mark_user_game()
+    {
+        return $this->belongsToMany('App\User', 'marks_users_games', 'game_id', 'user_id');
     }
 }

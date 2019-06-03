@@ -11,10 +11,25 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+        $categories_special = [];
+        foreach ($categories as $value) {
+            if ($value->is_game == 1) {
+                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_game']);
+            }
+            if ($value->is_movie == 1) {
+                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_movie']);
+            }
+            if ($value->is_special_game == 1) {
+                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_special_game']);
+            }
+            if ($value->is_special_movie == 1) {
+                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_special_movie']);
+            }
+        }
         return response()->json([
             'code' => 200,
             'status' => 'succes',
-            'categories' => $categories
+            'categories' => $categories_special
         ]);
     }
 
@@ -44,9 +59,9 @@ class CategoryController extends Controller
 
         if ($json) {
             $params_array = json_decode($json, true);
-
             $validate = \Validator::make($params_array, [
-                'name' => 'required'
+                'name' => 'required',
+                'special_category' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -56,8 +71,10 @@ class CategoryController extends Controller
                     'message' => 'Error de validación no se ha guardado la categoría'
                 ];
             } else {
+                $special_category=$params_array['special_category'];
                 $category = new Category();
                 $category->name = $params_array['name'];
+                $category-> $special_category= 1;
                 $category->save();
                 $data = [
                     'code' => 200,
