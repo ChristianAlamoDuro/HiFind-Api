@@ -44,3 +44,4 @@ Route::resource('/api/category_games','CategoryGameController');
 
 #POST /api/mark_game/json={"mark":5,"game_id":2,"user_id":1}
 Route::resource('/api/mark_game', 'MarkGameController');
+Route::resource('/api/movies', 'MovieController');
