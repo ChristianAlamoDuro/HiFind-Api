@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\response;
 use App\Game;
+use Illuminate\Support\Facades\DB;
 
 class GameController extends Controller
 {
@@ -18,13 +19,13 @@ class GameController extends Controller
         $dataResponse = [
             'code' => 200,
             'status' => 'succes',
-            'games'=>$data
+            'games' => $data
         ];
         $data = [
             'code' => 200,
             'status' => 'succes',
         ];
-       
+
         return response()->json($dataResponse);
     }
 
@@ -32,7 +33,7 @@ class GameController extends Controller
     public function show($name)
     {
         $games = Game::where('name', 'like', '%' . $name . '%')->get();
-        $data=[];
+        $data = [];
         if (!is_null($games)) {
             foreach ($games as $game) {
                 array_push($data, $this->build_show_response($game));
@@ -40,7 +41,7 @@ class GameController extends Controller
             $dataResponse = [
                 'code' => 200,
                 'status' => 'succes',
-                'games'=>$data
+                'games' => $data
             ];
         } else {
             $dataResponse = [
@@ -109,7 +110,6 @@ class GameController extends Controller
     public function update($id, Request $request)
     {
         $json = $request->input('json', null);
-
         if ($json) {
             $params_array = json_decode($json, true);
             $validate = \Validator::make($params_array, [
@@ -128,10 +128,23 @@ class GameController extends Controller
                     'message' => 'Error de validación no se ha actualizado el juego'
                 ];
             } else {
+                $params_to_update = [
+                    'name' => $params_array['name'],
+                    'sinopsis' => $params_array['sinopsis'],
+                    'out_date' => $params_array['out_date'],
+                    'public_directed' => $params_array['public_directed'],
+                    'duration' => $params_array['duration'],
+                    'image' => $params_array['image']
+                ];
                 unset($params_array['id']);
                 unset($params_array['created_at']);
-
-                $game = Game::where('id', $id)->update($params_array);
+                $game = Game::where('id', $id)->update($params_to_update);
+                $game = Game::find($id);
+                $categories = [];
+                foreach ($params_array['categories'] as $category) {
+                    array_push($categories, $category);
+                }
+                $game->categories()->sync($categories);
                 $data = [
                     'code' => 200,
                     'status' => 'succes',
