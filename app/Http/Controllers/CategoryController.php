@@ -14,16 +14,16 @@ class CategoryController extends Controller
         $categories_special = [];
         foreach ($categories as $value) {
             if ($value->is_game == 1) {
-                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_game']);
+                array_push($categories_special, ['name' => $value->name, 'special_category' => 'is_game']);
             }
             if ($value->is_movie == 1) {
-                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_movie']);
+                array_push($categories_special, ['name' => $value->name, 'special_category' => 'is_movie']);
             }
             if ($value->is_special_game == 1) {
-                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_special_game']);
+                array_push($categories_special, ['name' => $value->name, 'special_category' => 'is_special_game']);
             }
             if ($value->is_special_movie == 1) {
-                array_push($categories_special, ['name' => $value->name, 'special category' => 'is_special_movie']);
+                array_push($categories_special, ['name' => $value->name, 'special_category' => 'is_special_movie']);
             }
         }
         return response()->json([
