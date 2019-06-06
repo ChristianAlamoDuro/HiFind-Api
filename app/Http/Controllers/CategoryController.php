@@ -71,10 +71,10 @@ class CategoryController extends Controller
                     'message' => 'Error de validación no se ha guardado la categoría'
                 ];
             } else {
-                $special_category=$params_array['special_category'];
+                $special_category = $params_array['special_category'];
                 $category = new Category();
                 $category->name = $params_array['name'];
-                $category-> $special_category= 1;
+                $category->$special_category = 1;
                 $category->save();
                 $data = [
                     'code' => 200,
@@ -102,7 +102,7 @@ class CategoryController extends Controller
 
             $validate = \Validator::make($params_array, [
                 'name' => 'required',
-                'special_category'=>'required'
+                'special_category' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -114,16 +114,17 @@ class CategoryController extends Controller
             } else {
                 unset($params_array['id']);
                 unset($params_array['created_at']);
-                $params_to_update=[
-                    'is_game'=>false,
-                    'is_movie'=>false,
-                    'is_special_game'=>false,
-                    'is_special_movie'=>false
+                $params_to_update = [
+                    'is_game' => false,
+                    'is_movie' => false,
+                    'is_special_game' => false,
+                    'is_special_movie' => false
                 ];
+
                 Category::where('id', $id)->update($params_to_update);
-                $params_to_update=[
-                    'name'=>$params_array['name'],
-                    $params_array['special_category']=>true
+                $params_to_update = [
+                    'name' => $params_array['name'],
+                    $params_array['special_category'] => true
                 ];
                 Category::where('id', $id)->update($params_to_update);
                 $data = [
