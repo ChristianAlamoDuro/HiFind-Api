@@ -59,7 +59,6 @@ class GameController extends Controller
 
         if ($json) {
             $params_array = json_decode($json, true);
-
             $validate = \Validator::make($params_array, [
                 'name' => 'required',
                 'out_date' => 'required',
@@ -75,6 +74,32 @@ class GameController extends Controller
                     'code' => 400,
                     'status' => 'succes',
                     'message' => 'Error de validación no se ha guardado la categoría'
+                ];
+            }
+            if (isset($params_array['id'])) {
+                $params_to_update = [
+                    'name' => $params_array['name'],
+                    'sinopsis' => $params_array['sinopsis'],
+                    'out_date' => $params_array['out_date'],
+                    'public_directed' => $params_array['public_directed'],
+                    'duration' => $params_array['duration'],
+                    'image' => $params_array['image']
+                ];
+                $id=$params_array['id'];
+                unset($params_array['id']);
+                unset($params_array['created_at']);
+                $game = Game::where('id', $id)->update($params_to_update);
+                $game = Game::find($id);
+                $categories = [];
+                foreach ($params_array['categories'] as $category) {
+                    array_push($categories, $category);
+                }
+                $game->categories()->sync($categories);
+                $data = [
+                    'code' => 200,
+                    'status' => 'succes',
+                    'message' => 'Juego actualizado satisfactoriamente',
+                    'game' => $params_array
                 ];
             } else {
                 $game = new Game();
