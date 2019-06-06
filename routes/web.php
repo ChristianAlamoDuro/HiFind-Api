@@ -46,4 +46,12 @@ Route::resource('/api/category_games','CategoryGameController');
 
 #POST /api/mark_game/json={"mark":5,"game_id":2,"user_id":1}
 Route::resource('/api/mark_game', 'MarkGameController');
+
+#POST /api/delete/category/ id de categoria a eliminar ejemplo  {"id":1}
+#POST /api/delete/game/ id de juego a eliminar ejemplo  {"id":1}
+Route::resource('/api/delete/game', 'DeleteGameController');
+Route::resource('/api/delete/category', 'DeleteCategoryController');
+
+
+
 Route::resource('/api/movies', 'MovieController');

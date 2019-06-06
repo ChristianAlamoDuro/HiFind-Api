@@ -56,7 +56,7 @@ class GameController extends Controller
     public function store(Request $request)
     {
         $json = $request->input('json', null);
-
+        
         if ($json) {
             $params_array = json_decode($json, true);
             $validate = \Validator::make($params_array, [
@@ -132,61 +132,6 @@ class GameController extends Controller
         return response()->json($data);
     }
 
-    public function update($id, Request $request)
-    {
-        $json = $request->input('json', null);
-        if ($json) {
-            $params_array = json_decode($json, true);
-            $validate = \Validator::make($params_array, [
-                'name' => 'required',
-                'sinopsis' => 'required',
-                'out_date' => 'required',
-                'public_directed' => 'required',
-                'duration' => 'required',
-                'image' => 'required'
-            ]);
-
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'succes',
-                    'message' => 'Error de validación no se ha actualizado el juego'
-                ];
-            } else {
-                $params_to_update = [
-                    'name' => $params_array['name'],
-                    'sinopsis' => $params_array['sinopsis'],
-                    'out_date' => $params_array['out_date'],
-                    'public_directed' => $params_array['public_directed'],
-                    'duration' => $params_array['duration'],
-                    'image' => $params_array['image']
-                ];
-                unset($params_array['id']);
-                unset($params_array['created_at']);
-                $game = Game::where('id', $id)->update($params_to_update);
-                $game = Game::find($id);
-                $categories = [];
-                foreach ($params_array['categories'] as $category) {
-                    array_push($categories, $category);
-                }
-                $game->categories()->sync($categories);
-                $data = [
-                    'code' => 200,
-                    'status' => 'succes',
-                    'message' => 'Juego actualizado satisfactoriamente',
-                    'game' => $params_array
-                ];
-            }
-        } else {
-            $data = [
-                'code' => 404,
-                'status' => 'error',
-                'message' => 'Ups un error inesperado disculpe las molestias'
-            ];
-        }
-        return response()->json($data);
-    }
-
     public function build_show_response($game)
     {
         $categories = [];
@@ -208,4 +153,5 @@ class GameController extends Controller
             'marks' => $marks
         ];
     }
+
 }

@@ -80,8 +80,8 @@ ALTER TABLE `categories_games`
 ALTER TABLE `categories_games`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 ALTER TABLE `categories_games`
-  ADD CONSTRAINT `fk_categorie_id_categories_games` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`id`),
-  ADD CONSTRAINT `fk_game_id_categories_games` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`);
+  ADD CONSTRAINT `fk_categorie_id_categories_games` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_game_id_categories_games` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`) ON DELETE CASCADE;
 --
 
 CREATE TABLE `marks_users_games` (
@@ -98,8 +98,8 @@ ALTER TABLE `marks_users_games`
 ALTER TABLE `marks_users_games`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
   ALTER TABLE `marks_users_games`
-  ADD CONSTRAINT `fk_game_id_mark_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`),
-  ADD CONSTRAINT `fk_user_id_mark_game` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `fk_game_id_mark_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_id_mark_game` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Volcado de datos para la tabla `marks_users_games`
@@ -111,9 +111,9 @@ ALTER TABLE `marks_users_games`
 -- Estructura de tabla para la tabla `users`
 --
 INSERT INTO `users` (`id`, `username`, `role`, `email`, `password`, `image`, `created_at`, `updated_at`, `remember_token`) VALUES
-(1, 'admin', 'ROLE_ADMIN', 'admin@admin.com', 'admin1234', NULL, NULL, NULL, NULL),
-(2, 'Chrisatm13', 'ROLE_USER', 'chrisatm13@chrisatm13.com', 'Secret1234', NULL, NULL, NULL, NULL),
-(3, 'john', 'ROLE_USER', 'pepito@gmail.com', 'c8cdf720db5562a039be5d81c51a07c5120eaf0bf142b2144f1a1eb7a95678d3', NULL, '2019-05-23 07:49:08', '2019-05-23 07:49:08', NULL);
+(1, 'admin', 'ROLE_ADMIN', 'admin@admin.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, NULL, NULL, NULL),
+(2, 'Chrisatm13', 'ROLE_USER', 'chrisatm13@chrisatm13.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, NULL, NULL, NULL),
+(3, 'john', 'ROLE_USER', 'pepito@gmail.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, '2019-05-23 07:49:08', '2019-05-23 07:49:08', NULL);
 
 INSERT INTO `games` (`id`, `name`, `out_date`, `public_directed`, `duration`, `sinopsis`, `image`) VALUES
 (1, 'Red dead redemption', '2019-05-30 00:00:00', '+18', '1.5', 'Juego de matar a caballo oeste gromenaguer', NULL),
