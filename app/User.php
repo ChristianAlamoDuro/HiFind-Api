@@ -45,4 +45,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Game', 'marks_users_games', 'user_id', 'game_id');
     }
+    public function marks_users_movies()
+    {
+        return $this->belongsToMany('\App\Movie', 'marks_users_movies')->withPivot('movie_id','mark');
+    }
 }
