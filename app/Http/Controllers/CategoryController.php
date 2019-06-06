@@ -35,8 +35,17 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        $category = Category::find($id);
-        $categories_special = [];
+        if (!is_int($id)) {
+            $categories = Category::where($id, 1)->get();
+            $categories_special = [];
+            
+            foreach ($categories as $category) {
+                array_push($categories_special, ['id'=>$category->id, 'name'=>$category->name]);
+            }
+
+        } else {
+            $category = Category::find($id);
+            $categories_special = [];
             if ($category->is_game == 1) {
                 array_push($categories_special, ['id' => $category->id, 'name' => $category->name, 'special_category' => 'is_game']);
             }
@@ -49,6 +58,7 @@ class CategoryController extends Controller
             if ($category->is_special_movie == 1) {
                 array_push($categories_special, ['id' => $category->id, 'name' => $category->name, 'special_category' => 'is_special_movie']);
             }
+        }
         if (is_object($category)) {
             $data = [
                 'code' => 200,

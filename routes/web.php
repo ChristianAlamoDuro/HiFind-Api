@@ -19,8 +19,10 @@ Route::post('/users/update', 'UserController@update');
 #GET /api/categories
 #devuelve todas las categorias y su categoria especial
 #GET /api/categories/{id de categoria}
+#GET /api/categories/{nombre de la categoría especial} ejemplo /is_game
 #POST /api/categories/json={"name":"simuladores","special_category":"is_game"}
-#PUT /api/categories/id de categoría a modificar le pasas un json ejemplo json={"name":"rpg","special_category":"is_game"}
+#POST /api/categories/ le pasas el id el nombre de la categoria y el nombre de la categoría especial ejemplo {"id":1,"name":"ciencia ficcion","special_category":"is_movie"}
+
 
 Route::resource('/api/categories', 'CategoryController');
 

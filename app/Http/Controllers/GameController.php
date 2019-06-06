@@ -85,7 +85,7 @@ class GameController extends Controller
                     'duration' => $params_array['duration'],
                     'image' => $params_array['image']
                 ];
-                $id=$params_array['id'];
+                $id = $params_array['id'];
                 unset($params_array['id']);
                 unset($params_array['created_at']);
                 $game = Game::where('id', $id)->update($params_to_update);
@@ -200,7 +200,9 @@ class GameController extends Controller
         return [
             'name' => $game->name,
             'sinopsis' => $game->sinopsis,
-            'out_date' => $game->out_date, 'public_directed' => $game->public_directed, 'duration' => $game->duration,
+            'out_date' => $game->out_date, 
+            'public_directed' => $game->public_directed, 
+            'duration' => $game->duration,
             'image' => $game->image,
             'categories' => $categories,
             'marks' => $marks
