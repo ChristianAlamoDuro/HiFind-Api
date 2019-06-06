@@ -35,7 +35,8 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        if (!is_int($id)) {
+        
+        if ($id=='is_game'||$id=='is_movie'||$id=='is_special_movie'||$id=='is_special_movie') {
             $categories = Category::where($id, 1)->get();
             $categories_special = [];
             
