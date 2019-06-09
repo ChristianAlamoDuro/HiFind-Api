@@ -61,8 +61,6 @@ class GameController extends Controller
         if (is_object(json_decode($json))) {
             $user_id = json_decode($json)->user_id;
             if (Validation::adminValidate($user_id)) {
-                $image = file_get_contents($request->file('image'));
-                $image = base64_encode($image);
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
@@ -81,9 +79,9 @@ class GameController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array, $image);
+                        $data = $this->prepare_update($params_array);
                     } else {
-                        $data = $this->prepare_store($params_array, $image);
+                        $data = $this->prepare_store($params_array);
                     }
                 }
             } else {
@@ -127,7 +125,7 @@ class GameController extends Controller
         ];
     }
 
-    public function prepare_update($params_array, $image)
+    public function prepare_update($params_array)
     {
         $params_to_update = [
             'name' => $params_array['name'],
@@ -135,7 +133,7 @@ class GameController extends Controller
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
-            'image' => $image
+            'image' => $params_array['image']
         ];
         $id = $params_array['id'];
         unset($params_array['id']);
@@ -156,7 +154,7 @@ class GameController extends Controller
             'game' => $params_array
         ];
     }
-    public function prepare_store($params_array, $image)
+    public function prepare_store($params_array)
     {
         $game = new Game();
         $game->name = $params_array['name'];
@@ -164,7 +162,7 @@ class GameController extends Controller
         $game->sinopsis = $params_array['sinopsis'];
         $game->out_date = $params_array['out_date'];
         $game->public_directed = $params_array['public_directed'];
-        $game->image = $image;
+        $game->image = $params_array['image'];
         $game->save();
         $categories = [];
         foreach ($params_array['categories'] as $category) {

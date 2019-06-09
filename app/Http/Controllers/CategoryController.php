@@ -96,7 +96,7 @@ class CategoryController extends Controller
         return response()->json($data);
     }
 
-    public function prepare_store($params_array)
+    public function prepare_update($params_array)
     {
         $id = $params_array['id'];
         unset($params_array['id']);
@@ -122,7 +122,7 @@ class CategoryController extends Controller
         ];
     }
 
-    public function prepare_update($params_array)
+    public function prepare_store($params_array)
     {
         $special_category = $params_array['special_category'];
         $category = new Category();
