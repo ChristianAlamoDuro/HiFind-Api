@@ -57,6 +57,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $json = $request->input('json', null);
+
         if (is_object(json_decode($json))) {
             $user_id = json_decode($json)->user_id;
             if (Validation::adminValidate($user_id)) {
@@ -86,12 +87,14 @@ class CategoryController extends Controller
                     'message' => 'Error this user role dont have permission'
                 ];
             }
+        } else {
+            $data = [
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'Wrong data value'
+            ];
         }
-        $data = [
-            'code' => 404,
-            'status' => 'error',
-            'message' => 'Wrong data value'
-        ];
+
 
         return response()->json($data);
     }
