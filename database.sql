@@ -109,8 +109,8 @@ CREATE TABLE actors_movies(
     movie_id            int(255) not null,
     
     CONSTRAINT pk_actors_movies PRIMARY KEY (id),
-    CONSTRAINT fk_actor FOREIGN KEY (actor_id) REFERENCES actors (id),
-    CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movies (id)
+    CONSTRAINT fk_actor FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDb;
 
 
@@ -120,8 +120,8 @@ CREATE TABLE directors_movies(
     movie_id            int(255) not null,
     
     CONSTRAINT pk_directors_movies PRIMARY KEY (id),
-    CONSTRAINT fk_director_id_directors_movies FOREIGN KEY (director_id) REFERENCES directors (id),
-    CONSTRAINT fk_movie_director_ids_movies FOREIGN KEY (movie_id) REFERENCES movies (id)
+    CONSTRAINT fk_director_id_directors_movies FOREIGN KEY (director_id) REFERENCES directors (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_movie_director_ids_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDb;
 
 

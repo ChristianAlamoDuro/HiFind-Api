@@ -95,6 +95,28 @@ class MovieController extends Controller
                 ];
             } else {
                 if (!isset($params_array['id'])) {
+
+
+                    $request->file('image')->storeAs(
+                        public_path().'public/image', $params_array['image']
+                    );
+
+/*
+                    $data = $request->input('image');
+                    $photo = $request->file('image')->getClientOriginalName();
+                    $destination = base_path() . '/public/uploads';
+                    $request->file('image')->move($destination, $photo);
+                    
+*/
+                   /* $image = $request->file('file0');
+
+                    $image_name = $params_array['title'];
+                    \Storage::disk('images')->put($image_name, \File::get($image));
+                    */
+                    
+                   // var_dump(file('file0')); die();
+
+                   // $request->file('file0')->move(public_path('images'), $request->file('file0')->getClientOriginalName());
                     
                     $movie = new Movie();
                     $movie->title = $params_array['title'];
