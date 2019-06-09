@@ -53,5 +53,92 @@ Route::resource('/api/delete/game', 'DeleteGameController');
 Route::resource('/api/delete/category', 'DeleteCategoryController');
 
 
+#GET /api/special_category_games/{nombre de la categoria especial que quieres que sea true a filtrar}
+#GET /api/category_games/{nombre de la categoria a filtrar}
+Route::resource('/api/special_category_games','SpecialCategoryGameController');
+Route::resource('/api/category_games','CategoryGameController');
 
+#POST /api/mark_game/json={"mark":5,"game_id":2,"user_id":1}
+Route::resource('/api/mark_game', 'MarkGameController');
+
+#POST /api/delete/category/ id de categoria a eliminar ejemplo  {"id":1}
+Route::resource('/api/delete/game', 'DeleteGameController');
+#POST /api/delete/game/ id de juego a eliminar ejemplo  {"id":1}
+Route::resource('/api/delete/category', 'DeleteCategoryController');
+
+
+
+#GET /api/movies
+#Ruta que devuelve el listado completo de películas con sus categorías
+
+#GET /api/movies/{titulo de película}
+#Ruta que devuelve todas las películas que contengan el titulo introducido con su categoría y puntuación
+
+#POST /api/movies
+# Realiza una inserción y enlaza con actores y películas ya existentes.
+# Requiere un JSON : json={"title":"pelicula insertada","sinopsis":"esta pelicula se ha insertado","duration":"10","out_date":"2019-10-14 00:00:00","public_directed":"16","image":"img.png","film_producer":"productora de peli insertada","categories":[1,2] ,"directors":[1,2] ,"actors":[1,2]}
+#Si en el JSON se incluye un campo id ("id":1) en lugar de introducir datos actualiza la película con dicho id
 Route::resource('/api/movies', 'MovieController');
+
+
+#GET /api/actors
+#Retorna lista completa de actores
+
+#GET /api/actors/nombre-apellido
+#Busca actores por nombre y apellido. Es necesario pasarle por GET los datos introducidos por el usuario cambiando el elemento separador ESPACIO (' ') por GUION ('-')
+
+#POST /api/actors
+#Requiere un JSON: json={"id":"1","name":"modificado name", "surname":"modificado surname","birthday":"2014-06-05 00:00:00","biography":"modificada biografy","image":"imageModificada.png"}
+#Si en el JSON llega un campo ID búsca el actor con dicho ID y lo actualiza, si no llega id lo inserta como nuevo actor
+Route::resource('/api/actors', 'ActorController');
+
+
+
+#GET /api/directors
+#Retorna lista completa de directores
+
+#GET /api/directors/nombre-apellido
+#Busca directores por nombre y apellido. Es necesario pasarle por GET los datos introducidos por el usuario cambiando el elemento separador ESPACIO (' ') por GUION ('-')
+
+#POST /api/directors
+#Requiere un JSON: json={"id":"1","name":"modificado name", "surname":"modificado surname","birthday":"2014-06-05 00:00:00","biography":"modificada biografy","image":"imageModificada.png"}
+#Si en el JSON llega un campo ID búsca el actor con dicho ID y lo actualiza, si no llega id lo inserta como nuevo director
+Route::resource('/api/directors', 'DirectorController');
+
+
+
+
+#GET /api/special_category_movies/{nombre categoría especial}
+#Retorna los casos en los cuales la categoria enviada por get tiene valor true
+Route::resource('/api/special_category_movies','SpecialCategoryMovieController');
+
+
+
+#GET /api/category_movies/{nombre de la categoría}
+#Retornará las películas con la categoría enviada por GET
+Route::resource('/api/category_movie','CategoryMovieController');
+
+
+
+
+#POST /api/delete/movie 
+#Recibe un JSON con el id de la película que se desea eliminar
+Route::resource('/api/delete/movie', 'DeleteMovieController');
+
+
+
+#POST /api/delete/actor 
+#Recibe un JSON con el id del actor que se desea eliminar
+Route::resource('/api/delete/actor', 'DeleteActorController');
+
+
+
+#POST /api/delete/director
+#Recibe un JSON con el id del director que se desea eliminar
+Route::resource('/api/delete/director', 'DeleteDirectorController');
+
+
+
+#POST /api/mark_movie/
+#Recive un JSON: json={"movie_id":1,"user_id":1,"mark":10}
+Route::resource('/api/mark_movie', 'MarkMovieController');
