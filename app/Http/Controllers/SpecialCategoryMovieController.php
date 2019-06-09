@@ -7,21 +7,22 @@ use Illuminate\Http\Response;
 use App\Movie;
 use App\Category;
 
-class CategoryMovieController extends Controller
+class SpecialCategoryMovieController extends Controller
 {
-    
     public function show($name)
     {
-        $categories = Category::where('name', 'like', '%' . $name . '%')->get();
-        $movies=[];
-        if (count($categories)>0){
-            foreach ($categories as $category) {
-                foreach ($category->movies as $movie) {
-                    array_push($movie, Movies::find($movie->id));
+        if ($name == "is_movie" || $name == "is_game" || $name == "is_special_movie" || $name == "is_special_game"){
+            $movies = [];
+            $categories = Category::where($name, true)->get();
+            if (!empty($categories)) {
+                foreach ($categories as $category) {
+                    foreach ($category->movies as $movie) {
+                       
+                        array_push($movies, Movie::find($movie->id));
+                    }
                 }
-            }
-            array_unique($movies);
-            if (!is_null($categories)) {
+                $movies = array_unique($movies);
+                
                 $data = [
                     'code' => 200,
                     'status' => 'succes',
@@ -39,10 +40,10 @@ class CategoryMovieController extends Controller
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'category not found'
+                'message' => 'wrong special category'
             ];
         }
+        
         return response()->json($data);
     }
-
 }
