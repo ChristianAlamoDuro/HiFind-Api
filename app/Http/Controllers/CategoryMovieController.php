@@ -13,7 +13,7 @@ class CategoryMovieController extends Controller
     public function show($name)
     {
         $categories = Category::where('name', 'like', '%' . $name . '%')->get();
-        $games=[];
+        $movies=[];
         if (count($categories)>0){
             foreach ($categories as $category) {
                 foreach ($category->movies as $movie) {
