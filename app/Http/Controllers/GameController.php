@@ -150,7 +150,8 @@ class GameController extends Controller
             'duration' => $game->duration,
             'image' => $game->image,
             'categories' => $categories,
-            'marks' => $marks
+            'marks' => $marks,
+            'id' => $game->id
         ];
     }
 
