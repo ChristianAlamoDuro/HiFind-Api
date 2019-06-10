@@ -37,12 +37,17 @@ class GameController extends Controller
 
     public function show($name)
     {
-        $games = Game::where('name', 'like', '%' . $name . '%')->get();
         $data = [];
-        if (!is_null($games)) {
+        if (is_numeric($name)) {
+            $games = Game::find($name);
+            array_push($data, $this->build_show_response($games));
+        } else {
+            $games = Game::where('name', 'like', '%' . $name . '%')->get();
             foreach ($games as $game) {
                 array_push($data, $this->build_show_response($game));
             }
+        }
+        if (!is_null($games)) {
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
@@ -67,7 +72,7 @@ class GameController extends Controller
                 $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
-                $image_name=$image->getFilename().'.'.$extension;
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
@@ -86,9 +91,9 @@ class GameController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array,$image_name);
+                        $data = $this->prepare_update($params_array, $image_name);
                     } else {
-                        $data = $this->prepare_store($params_array,$image_name);
+                        $data = $this->prepare_store($params_array, $image_name);
                     }
                 }
             } else {
@@ -132,7 +137,7 @@ class GameController extends Controller
         ];
     }
 
-    public function prepare_update($params_array,$image)
+    public function prepare_update($params_array, $image)
     {
         $params_to_update = [
             'name' => $params_array['name'],
@@ -158,10 +163,10 @@ class GameController extends Controller
             'code' => 200,
             'status' => 'success',
             'message' => 'Game update successfull',
-            'game' => [$params_to_update,'Categories'=>$categories]
+            'game' => [$params_to_update, 'Categories' => $categories]
         ];
     }
-    public function prepare_store($params_array,$image)
+    public function prepare_store($params_array, $image)
     {
         $game = new Game();
         $game->name = $params_array['name'];
