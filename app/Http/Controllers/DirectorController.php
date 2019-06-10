@@ -14,13 +14,12 @@ use App\Validation;
 class DirectorController extends Controller
 {
     public function build_show_response($director)
-    {  
-        
+    {    
         return [
-            'id' => $movie->id,
+            'id' => $director->id,
             'name' => $director->name,
             'surname' => $director->surname, 
-            'birthday' => $movie->birthday, 
+            'birthday' => $director->birthday, 
             'image' => $director->image,
             'biography' => $director->biography
         ];

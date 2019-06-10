@@ -104,7 +104,10 @@ class MovieController extends Controller
 
     public function store(Request $request)
     {
+
         $json = $request->input('json', null);
+
+       // var_dump($json); die();
 
         if (is_object(json_decode($json))) {
 
@@ -112,12 +115,12 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
-                $image = $request->file('image');
+               /* $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
 
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
                
-                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; */
                 $params_array = json_decode($json, true);
 
                 $validate = \Validator::make($params_array, [
@@ -157,26 +160,26 @@ class MovieController extends Controller
                 'message' => 'Wrong data values'
             ];
         }
-
+ return response()->json($data);
     }
 
     public function prepare_update($params_array)
     {
         $params_to_update = [
-            'title' => $params_array['name'],
+            'title' => $params_array['title'],
             'sinopsis' => $params_array['sinopsis'],
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
-            'film_producer' => $params_to_update['film_producer'],
+            'film_producer' => $params_array['film_producer'],
             'image' => $params_array['image']
         ];
         $id = $params_array['id'];
         unset($params_array['id']);
         unset($params_array['created_at']);
 
-        $movie = Movies::where('id', $id)->update($params_to_update);
-        $movie = Movies::find($id);
+        $movie = Movie::where('id', $id)->update($params_to_update);
+        $movie = Movie::find($id);
 
         $categories = [];
         $directors = [];
