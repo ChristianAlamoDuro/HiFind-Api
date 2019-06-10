@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Movie;
 use App\Category;
 use App\Validation;
@@ -34,23 +37,20 @@ class MovieController extends Controller
         foreach ($movie->actors_movies as $actor) {
             array_push($actors, $actor->pivot->name);
         }
-        
+
         return [
-            'code' => 200,
-            'status' => 'success',
-            'movie' => [
-                'title' => $movie->title,
-                'out_date' => $movie->out_date, 
-                'public_directed' => $movie->public_directed, 
-                'film_producer' => $movie->film_producer, 
-                'duration' => $movie->duration,
-                'sinopsis' => $movie->sinopsis,
-                'image' => $movie->image,
-                'categories' => $categories,
-                'marks' => $marks,
-                'directors' => $directors,
-                'actors' => $actors
-            ]
+            'id' => $movie->id,
+            'title' => $movie->title,
+            'out_date' => $movie->out_date, 
+            'public_directed' => $movie->public_directed, 
+            'film_producer' => $movie->film_producer, 
+            'duration' => $movie->duration,
+            'sinopsis' => $movie->sinopsis,
+            'image' => $movie->image,
+            'categories' => $categories,
+            'marks' => $marks,
+            'directors' => $directors,
+            'actors' => $actors
         ];
     }
 
@@ -112,7 +112,14 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
+
                 $validate = \Validator::make($params_array, [
                     'title' => 'required',
                     'out_date' => 'required',
