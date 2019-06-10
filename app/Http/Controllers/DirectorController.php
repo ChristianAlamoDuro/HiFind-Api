@@ -14,11 +14,13 @@ use App\Validation;
 class DirectorController extends Controller
 {
     public function build_show_response($director)
-    {
+    {  
+        
         return [
+            'id' => $movie->id,
             'name' => $director->name,
             'surname' => $director->surname, 
-            'birthday' => $director->birthday, 
+            'birthday' => $movie->birthday, 
             'image' => $director->image,
             'biography' => $director->biography
         ];
@@ -106,12 +108,12 @@ class DirectorController extends Controller
 
                 $params_array = json_decode($json, true);
 
-            $validate = \Validator::make($params_array, [
-                'name' => 'required',
-                'surname' => 'required',
-                'birthday' => 'required',
-                'biography' => 'required'
-            ]);
+                $validate = \Validator::make($params_array, [
+                    'name' => 'required',
+                    'surname' => 'required',
+                    'birthday' => 'required',
+                    'biography' => 'required'
+                ]);
 
             if ($validate->fails()) {
                 $data = [

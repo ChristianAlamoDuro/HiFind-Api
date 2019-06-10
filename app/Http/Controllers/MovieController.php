@@ -34,23 +34,22 @@ class MovieController extends Controller
         foreach ($movie->actors_movies as $actor) {
             array_push($actors, $actor->pivot->name);
         }
-        
+      
+//'%d/%m/%Y %H:%i'
+
         return [
-            'code' => 200,
-            'status' => 'success',
-            'movie' => [
-                'title' => $movie->title,
-                'out_date' => $movie->out_date, 
-                'public_directed' => $movie->public_directed, 
-                'film_producer' => $movie->film_producer, 
-                'duration' => $movie->duration,
-                'sinopsis' => $movie->sinopsis,
-                'image' => $movie->image,
-                'categories' => $categories,
-                'marks' => $marks,
-                'directors' => $directors,
-                'actors' => $actors
-            ]
+            'id' => $movie->id,
+            'title' => $movie->title,
+            'out_date' => $movie->out_date, 
+            'public_directed' => $movie->public_directed, 
+            'film_producer' => $movie->film_producer, 
+            'duration' => $movie->duration,
+            'sinopsis' => $movie->sinopsis,
+            'image' => $movie->image,
+            'categories' => $categories,
+            'marks' => $marks,
+            'directors' => $directors,
+            'actors' => $actors
         ];
     }
 
@@ -113,6 +112,7 @@ class MovieController extends Controller
             if (Validation::adminValidate($user_id)) {
 
                 $params_array = json_decode($json, true);
+
                 $validate = \Validator::make($params_array, [
                     'title' => 'required',
                     'out_date' => 'required',
