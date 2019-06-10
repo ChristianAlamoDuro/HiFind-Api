@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Movie;
 use App\Category;
 use App\Validation;
-use App\Directors;
-use App\Actors;
+use App\Director;
+use App\Actor;
 
 
 class MovieController extends Controller

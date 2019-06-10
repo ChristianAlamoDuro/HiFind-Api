@@ -33,12 +33,12 @@ class DirectorController extends Controller
         }
         $dataResponse = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'directors' => $data
         ];
         $data = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
         ];
 
         return response()->json($dataResponse);

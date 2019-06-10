@@ -33,12 +33,12 @@ class ActorController extends Controller
         }
         $dataResponse = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'actors' => $data
         ];
         $data = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
         ];
 
         return response()->json($dataResponse);
