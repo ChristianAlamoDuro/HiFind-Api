@@ -105,6 +105,89 @@ ALTER TABLE `marks_users_games`
 -- Volcado de datos para la tabla `marks_users_games`
 --
 
+--
+-- Estructura de tabla para la tabla `movies`
+--
+
+CREATE TABLE directors(
+    id                  int(255) auto_increment not null,
+    name	              varchar(20) not null,
+    surname             varchar(100),
+    birthday            date DEFAULT NULL,
+    biography           varchar(255),
+    image               varchar(255),
+    CONSTRAINT pk_directors PRIMARY KEY (id)
+)ENGINE=InnoDb;
+
+
+CREATE TABLE actors(
+    id                  int(255) auto_increment not null,
+    name	              varchar(20) not null,
+    surname             varchar(100),
+    birthday            date DEFAULT NULL,
+    biography           varchar(255),
+    image               varchar(255),
+    CONSTRAINT pk_actors PRIMARY KEY (id)
+)ENGINE=InnoDb;
+
+CREATE TABLE movies(
+    id                  int(255) auto_increment not null,
+    title	              varchar(255) not null,
+    out_date            date DEFAULT NULL,
+    public_directed     varchar(3) DEFAULT NULL,
+    film_producer       varchar(255) DEFAULT NULL,
+    duration            float DEFAULT NULL,
+    sinopsis            varchar(255) DEFAULT NULL,
+    image               varchar(255) DEFAULT NULL,
+    CONSTRAINT pk_movies PRIMARY KEY (id)
+)ENGINE=InnoDb;
+
+
+CREATE TABLE actors_movies(
+    id                  int(255) auto_increment not null,
+    actor_id            int(255) not null,
+    movie_id            int(255) not null,
+    
+    CONSTRAINT pk_actors_movies PRIMARY KEY (id),
+    CONSTRAINT fk_actor FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDb;
+
+
+CREATE TABLE directors_movies(
+    id                  int(255) auto_increment not null,
+    director_id         int(255) not null,
+    movie_id            int(255) not null,
+    
+    CONSTRAINT pk_directors_movies PRIMARY KEY (id),
+    CONSTRAINT fk_director_id_directors_movies FOREIGN KEY (director_id) REFERENCES directors (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_movie_director_ids_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDb;
+
+
+CREATE TABLE categories_movies (
+    id 			            int(255) auto_increment not null,
+    movie_id 		        int(255) not null,
+    category_id 	      int(255) not null,
+
+    CONSTRAINT pk_categories_movies PRIMARY KEY (id),
+    CONSTRAINT fk_category_id_categories_movies FOREIGN KEY (category_id) REFERENCES categories (id),
+    CONSTRAINT fk_movie_id_categories_movies FOREIGN KEY (movie_id) REFERENCES movies (id)
+) ENGINE=InnoDB;
+
+CREATE TABLE marks_users_movies (
+  id                    int(255) auto_increment not null,
+  movie_id              int(255) NOT NULL,
+  user_id               int(255) NOT NULL,
+  mark                  int(5) NOT NULL,
+  CONSTRAINT pk_marks_users_movies PRIMARY KEY (id),
+  CONSTRAINT fk_movie_id_marks_users_movies FOREIGN KEY (movie_id) REFERENCES movies (id),
+  CONSTRAINT fk_user_id_marks_users_movies FOREIGN KEY (user_id) REFERENCES users (id)
+) ENGINE=InnoDB;
+
+--
+--
+
 -- --------------------------------------------------------
 
 --
@@ -144,5 +227,33 @@ INSERT INTO `marks_users_games` (`id`, `game_id`, `user_id`, `mark`) VALUES
 (1, 1, 2, 10),
 (2, 1, 2, 10),
 (3, 1, 3, 7);
+
+INSERT INTO `actors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES
+('1', 'frodo', 'Baggins', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
+('2', 'Samwise', 'Gamgee', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
+
+INSERT INTO `directors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES 
+('1', 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 
+'Scorsese.png'), ('2', 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
+
+INSERT INTO `movies` (`id`, `title`, `out_date`, `public_directed`, `film_producer`, `duration`, `sinopsis`, `image`) VALUES 
+('1', 'the lord of the ring the fellowship of the ring', '2019-03-03 00:00:00', '12', 'no clue', '228', 'The Lord of the Rings: The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson based on the first volume of J. R. R. Tolkiens The Lord of the Rings.', 'lotr.png'), 
+('2', 'Best movie', '2019-10-17', '7', 'besrt producer', '120', 'best movie sinopsis', 'best.png');
+
+INSERT INTO `actors_movies` (`id`, `actor_id`, `movie_id`) VALUES 
+('1', '1', '1'), 
+('2', '2', '2');
+
+INSERT INTO `directors_movies` (`id`, `director_id`, `movie_id`) VALUES 
+('1', '1', '2'), 
+('2', '2', '1');
+
+INSERT INTO `categories_movies` (`id`, `movie_id`, `category_id`) VALUES 
+('1', '1', '2'), 
+('2', '2', '3');
+
+INSERT INTO `marks_users_movies` (`id`, `movie_id`, `user_id`, `mark`) VALUES 
+('1', '2', '1', '9'), 
+('2', '1', '2', '10');
 
 COMMIT;

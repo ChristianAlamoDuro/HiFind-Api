@@ -45,7 +45,7 @@ class GameController extends Controller
             }
             $dataResponse = [
                 'code' => 200,
-                'status' => 'succes',
+                'status' => 'success',
                 'games' => $data
             ];
         } else {
@@ -81,7 +81,7 @@ class GameController extends Controller
                 if ($validate->fails()) {
                     $data = [
                         'code' => 400,
-                        'status' => 'succes',
+                        'status' => 'success',
                         'message' => 'Validation error'
                     ];
                 } else {
@@ -155,7 +155,7 @@ class GameController extends Controller
         $game->categories()->sync($categories);
         return [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'message' => 'Game update successfull',
             'game' => [$params_to_update,'Categories'=>$categories]
         ];
@@ -179,8 +179,8 @@ class GameController extends Controller
         $game->categories()->attach($categories);
         return  [
             'code' => 200,
-            'status' => 'succes',
-            'message' => 'Game store succesfull',
+            'status' => 'success',
+            'message' => 'Game store successfull',
             'game' => $game
         ];
     }
