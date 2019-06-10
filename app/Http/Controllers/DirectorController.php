@@ -106,7 +106,14 @@ class DirectorController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
+
 
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Movie;
 use App\Category;
 use App\Validation;
@@ -34,8 +37,6 @@ class MovieController extends Controller
         foreach ($movie->actors_movies as $actor) {
             array_push($actors, $actor->pivot->name);
         }
-      
-//'%d/%m/%Y %H:%i'
 
         return [
             'id' => $movie->id,
@@ -111,6 +112,12 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
 
                 $validate = \Validator::make($params_array, [
