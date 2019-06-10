@@ -8,6 +8,9 @@ use App\Game;
 use Illuminate\Support\Facades\DB;
 use App\Category;
 use App\Validation;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class GameController extends Controller
 {
@@ -42,7 +45,7 @@ class GameController extends Controller
             }
             $dataResponse = [
                 'code' => 200,
-                'status' => 'succes',
+                'status' => 'success',
                 'games' => $data
             ];
         } else {
@@ -61,6 +64,10 @@ class GameController extends Controller
         if (is_object(json_decode($json))) {
             $user_id = json_decode($json)->user_id;
             if (Validation::adminValidate($user_id)) {
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+                $image_name=$image->getFilename().'.'.$extension;
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
@@ -74,14 +81,14 @@ class GameController extends Controller
                 if ($validate->fails()) {
                     $data = [
                         'code' => 400,
-                        'status' => 'succes',
+                        'status' => 'success',
                         'message' => 'Validation error'
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array);
+                        $data = $this->prepare_update($params_array,$image_name);
                     } else {
-                        $data = $this->prepare_store($params_array);
+                        $data = $this->prepare_store($params_array,$image_name);
                     }
                 }
             } else {
@@ -125,7 +132,7 @@ class GameController extends Controller
         ];
     }
 
-    public function prepare_update($params_array)
+    public function prepare_update($params_array,$image)
     {
         $params_to_update = [
             'name' => $params_array['name'],
@@ -133,7 +140,7 @@ class GameController extends Controller
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
-            'image' => $params_array['image']
+            'image' => $image
         ];
         $id = $params_array['id'];
         unset($params_array['id']);
@@ -149,12 +156,12 @@ class GameController extends Controller
         $game->categories()->sync($categories);
         return [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'message' => 'Game update successfull',
-            'game' => $params_array
+            'game' => [$params_to_update,'Categories'=>$categories]
         ];
     }
-    public function prepare_store($params_array)
+    public function prepare_store($params_array,$image)
     {
         $game = new Game();
         $game->name = $params_array['name'];
@@ -162,7 +169,7 @@ class GameController extends Controller
         $game->sinopsis = $params_array['sinopsis'];
         $game->out_date = $params_array['out_date'];
         $game->public_directed = $params_array['public_directed'];
-        $game->image = $params_array['image'];
+        $game->image = $image;
         $game->save();
         $categories = [];
         foreach ($params_array['categories'] as $category) {
@@ -173,8 +180,8 @@ class GameController extends Controller
         $game->categories()->attach($categories);
         return  [
             'code' => 200,
-            'status' => 'succes',
-            'message' => 'Game store succesfull',
+            'status' => 'success',
+            'message' => 'Game store successfull',
             'game' => $game
         ];
     }

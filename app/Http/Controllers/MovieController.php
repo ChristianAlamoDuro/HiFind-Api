@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use App\Movie;
+use App\Category;
+use App\Validation;
+use App\Director;
+use App\Actor;
 
 
 class MovieController extends Controller
@@ -13,17 +18,26 @@ class MovieController extends Controller
     public function build_show_response($movie)
     {
         $categories = [];
+        $directors = [];
+        $actors = [];
         $marks = [];
+
         foreach ($movie->categories_movies as $category) {
             array_push($categories, $category->name);
         }
         foreach ($movie->marks_movies as $mark) {
             array_push($marks, $mark->pivot->mark);
         }
+        foreach ($movie->directors_movies as $director) {
+            array_push($directors, $director->pivot->name);
+        }
+        foreach ($movie->actors_movies as $actor) {
+            array_push($actors, $actor->pivot->name);
+        }
         
         return [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'movie' => [
                 'title' => $movie->title,
                 'out_date' => $movie->out_date, 
@@ -33,7 +47,9 @@ class MovieController extends Controller
                 'sinopsis' => $movie->sinopsis,
                 'image' => $movie->image,
                 'categories' => $categories,
-                'marks' => $marks
+                'marks' => $marks,
+                'directors' => $directors,
+                'actors' => $actors
             ]
         ];
     }
@@ -42,14 +58,21 @@ class MovieController extends Controller
     {
         $data = [];
         $movies = Movie::all();
+
         foreach ($movies as $movie) {
             array_push($data, $this->build_show_response($movie));
         }
-        return response()->json([
+        $dataResponse = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'movies' => $data
-        ]);
+        ];
+        $data = [
+            'code' => 200,
+            'status' => 'success',
+        ];
+
+        return response()->json($dataResponse);
     }
     
     public function show($title)
@@ -58,194 +81,175 @@ class MovieController extends Controller
         
         $data = [];
         if (!is_null($movies)) {
+
             foreach ($movies as $movie) {
                 array_push($data, $this->build_show_response($movie));
             }
+
+            $dataResponse = [
+                'code' => 200,
+                'status' => 'success',
+                'movies' => $data
+            ];
+            
         } else {
-            $data = [
+            $dataResponse = [
                 'code' => 404,
                 'status' => 'error',
                 'message' => 'movie not found'
             ];
         }
-        return response()->json($data);
+        return response()->json($dataResponse);
     }
 
     public function store(Request $request)
     {
         $json = $request->input('json', null);
 
-        if ($json) {
-            $params_array = json_decode($json, true);
-            $validate = \Validator::make($params_array, [
-                'title' => 'required',
-                'out_date' => 'required',
-                'public_directed' => 'required',
-                'film_producer' => 'required',
-                'duration' => 'required',
-                'sinopsis' => 'required',
-                'image' => 'required'
-            ]);
+        if (is_object(json_decode($json))) {
 
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'Error',
-                    'message' => 'The data validation was not correct'
-                ];
+            $user_id = json_decode($json)->user_id;
+
+            if (Validation::adminValidate($user_id)) {
+
+                $params_array = json_decode($json, true);
+                $validate = \Validator::make($params_array, [
+                    'title' => 'required',
+                    'out_date' => 'required',
+                    'public_directed' => 'required',
+                    'film_producer' => 'required',
+                    'duration' => 'required',
+                    'sinopsis' => 'required'
+                ]);
+    
+
+                if ($validate->fails()) {
+                    $data = [
+                        'code' => 400,
+                        'status' => 'success',
+                        'message' => 'Validation error'
+                    ];
+                } else {
+                    if (isset($params_array['id'])) {
+                        $data = $this->prepare_update($params_array);
+                    } else {
+                        $data = $this->prepare_store($params_array);
+                    }
+                }
             } else {
-                if (!isset($params_array['id'])) {
-
-
-                    $request->file('image')->storeAs(
-                        public_path().'public/image', $params_array['image']
-                    );
-
-/*
-                    $data = $request->input('image');
-                    $photo = $request->file('image')->getClientOriginalName();
-                    $destination = base_path() . '/public/uploads';
-                    $request->file('image')->move($destination, $photo);
-                    
-*/
-                   /* $image = $request->file('file0');
-
-                    $image_name = $params_array['title'];
-                    \Storage::disk('images')->put($image_name, \File::get($image));
-                    */
-                    
-                   // var_dump(file('file0')); die();
-
-                   // $request->file('file0')->move(public_path('images'), $request->file('file0')->getClientOriginalName());
-                    
-                    $movie = new Movie();
-                    $movie->title = $params_array['title'];
-                    $movie->out_date = $params_array['out_date'];
-                    $movie->public_directed = $params_array['public_directed'];
-                    $movie->film_producer = $params_array['film_producer'];
-                    $movie->duration = $params_array['duration'];
-                    $movie->sinopsis = $params_array['sinopsis'];
-                    $movie->image = $params_array['image'];
-                    $movie->save();
-    
-                    $categories = [];
-                    $directors = [];
-                    $actors = [];
-    
-                    /* Categories */
-                    foreach ($params_array['categories'] as $category) {
-                        array_push($categories, $category);
-                    }
-                    $movie->categories_movies()->attach($categories);
-    
-                    /* Directors */
-                    foreach ($params_array['directors'] as $director) {
-                        array_push($directors, $director);
-                    }
-                    $movie->directors_movies()->attach($directors);
-    
-                    /* Actors */
-                    foreach ($params_array['actors'] as $actor) {
-                        array_push($actors, $actor);
-                    }
-                    $movie->actors_movies()->attach($actors);
-                    
-    
-                    $data = [
-                        'code' => 200,
-                        'status' => 'succes',
-                        'message' => 'Movie stored successfully',
-                        'movie' => $movie
-                    ];
-                }
-                else {
-                    $params_update = [
-                        'title' => $params_array['title'],
-                        'out_date' => $params_array['out_date'],
-                        'public_directed' => $params_array['public_directed'],
-                        'film_producer' => $params_array['film_producer'],
-                        'duration' => $params_array['duration'],
-                        'sinopsis' => $params_array['sinopsis'],
-                        'image' => $params_array['image']
-                    ];
-                    $id = $params_array['id'];
-                    unset($params_array['id']);
-                    unset($params_array['created_at']);
-
-                    $movie = Movie::where('id', $id)->update($params_update);
-                    $movie = Movie::find($id);
-                    $categories = [];
-                    foreach ($params_array['categories'] as $category) {
-                        array_push($categories, $category);
-                    }
-                    
-                    $movie->categories()->sync($categories);
-
-                    $data = [
-                        'code' => 200,
-                        'status' => 'succes',
-                        'message' => 'movie updated successfully',
-                        'movie' => $params_array
-                    ];
-                }
-               
+                $data = [
+                    'code' => 404,
+                    'status' => 'error',
+                    'message' => 'Error this user role dont have permission'
+                ];
             }
         } else {
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'Error. Movie could not be stored.'
+                'message' => 'Wrong data values'
             ];
         }
-        return response()->json($data);
+
     }
 
-    /*public function update($id, Request $request)
+    public function prepare_update($params_array)
     {
-        $json = $request->input('json', null);
+        $params_to_update = [
+            'title' => $params_array['name'],
+            'sinopsis' => $params_array['sinopsis'],
+            'out_date' => $params_array['out_date'],
+            'public_directed' => $params_array['public_directed'],
+            'duration' => $params_array['duration'],
+            'film_producer' => $params_to_update['film_producer'],
+            'image' => $params_array['image']
+        ];
+        $id = $params_array['id'];
+        unset($params_array['id']);
+        unset($params_array['created_at']);
 
-        if ($json) {
-            
-            $params_array = json_decode($json, true);
-            
-            $validate = \Validator::make($params_array, [
-                'title' => 'required',
-                'out_date' => 'required',
-                'public_directed' => 'required',
-                'film_producer' => 'required',
-                'duration' => 'required',
-                'sinopsis' => 'required',
-                'image' => 'required'
-            ]);
+        $movie = Movies::where('id', $id)->update($params_to_update);
+        $movie = Movies::find($id);
 
-            
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'succes',
-                    'message' => 'The data validation was not correct'
-                ];
-            } else {
-                unset($params_array['id']);
-                unset($params_array['created_at']);
+        $categories = [];
+        $directors = [];
+        $actors = [];
 
-                $movie = Movie::where('id', $id)->update($params_array);
-                $data = [
-                    'code' => 200,
-                    'status' => 'succes',
-                    'message' => 'Movie updated successfully.',
-                    'movie' => $params_array
-                ];
+        foreach ($params_array['categories'] as $category) {
+            if (Category::find($category)) {
+                array_push($categories, $category);
             }
-        } else {
-            $data = [
-                'code' => 404,
-                'status' => 'error',
-                'message' => 'Error. Movie could not be stored.'
-            ];
         }
-        return response()->json($data);
-    } */
+        $movie->categories_movies()->sync($categories);
+        
+        foreach ($params_array['directors'] as $director) {
+            if (Director::find($director)) {
+                array_push($directors, $director);
+            }
+        }
+        $movie->directors_movies()->attach($directors);
+
+        foreach ($params_array['actors'] as $actor) {
+            if (Actor::find($category)) {
+                array_push($actors, $actor);
+            }
+        }
+        $movie->actors_movies()->attach($actors);
+
+        return [
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'movie updated successfully',
+            'movie' => $params_array
+        ];
+    }
 
 
+
+    public function prepare_store($params_array)
+    {
+        $movie = new Movie();
+        $movie->title = $params_array['title'];
+        $movie->duration = $params_array['duration'];
+        $movie->film_producer = $params_array['film_producer'];
+        $movie->sinopsis = $params_array['sinopsis'];
+        $movie->out_date = $params_array['out_date'];
+        $movie->public_directed = $params_array['public_directed'];
+        $movie->image = $params_array['image'];
+        $movie->save();
+
+        $categories = [];
+        $directors = [];
+        $actors = [];
+
+        foreach ($params_array['categories'] as $category) {
+            if (Category::find($category)) {
+                array_push($categories, $category);
+            }
+        }
+        $movie->categories_movies()->attach($categories);
+
+        foreach ($params_array['directors'] as $director) {
+            if (Director::find($director)) {
+                array_push($directors, $director);
+            }
+        }
+        $movie->directors_movies()->attach($directors);
+
+
+        foreach ($params_array['actors'] as $actor) {
+            if (Actor::find($actor)) {
+                array_push($actors, $actor);
+            }
+        }
+        $movie->actors_movies()->attach($actors);
+
+
+        return  [
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'movie store successfull',
+            'movie' => $movie
+        ];
+    }
 }

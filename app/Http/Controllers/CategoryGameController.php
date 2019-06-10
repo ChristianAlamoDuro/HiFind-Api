@@ -12,40 +12,40 @@ class CategoryGameController extends Controller
 
     public function show($name)
     {
-        $categories = Category::where('name', $name)->get();
         $games = [];
-
-        if (sizeof($categories)!=0) {
-            foreach ($categories as $category) {
-                foreach ($category->games as $game) {
-                    array_push($games, Game::find($game->id));
+        if (is_numeric($name)) {
+            $category = Category::find($name);
+            array_push($games, $this->build_game_response($category));
+        } else {
+            $categories = Category::where('name', $name)->get();
+            if (sizeof($categories) != 0) {
+                foreach ($categories as $category) {
+                    array_push($games, $this->build_game_response($category));
                 }
             }
-            if (!empty($games)) {
-                array_unique($games);
-    
-                $data = [
-                    'code' => 200,
-                    'status' => 'succes',
-                    'Games' => $games
-                ];
-            }else{
-                $data = [
-                    'code' => 404,
-                    'status' => 'error',
-                    'message' => 'there is no game for that category'
-                ];
-
-            }
-         }
-         else {
+        }
+        if (!empty($games)) {
+            $data = [
+                'code' => 200,
+                'status' => 'succes',
+                'Games' => $games
+            ];
+        } else {
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'category not found'
+                'message' => 'there is no game for that category'
             ];
         }
-        
         return response()->json($data);
+    }
+
+    public function build_game_response($category)
+    {
+        $data_array = [];
+        foreach ($category->games as $game) {
+            array_push($data_array, Game::find($game->id));
+        }
+        return $data_array;
     }
 }
