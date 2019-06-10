@@ -94,8 +94,6 @@ class CategoryController extends Controller
                 'message' => 'Wrong data value'
             ];
         }
-
-
         return response()->json($data);
     }
 

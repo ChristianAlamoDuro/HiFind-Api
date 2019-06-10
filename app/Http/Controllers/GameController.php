@@ -8,6 +8,9 @@ use App\Game;
 use Illuminate\Support\Facades\DB;
 use App\Category;
 use App\Validation;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class GameController extends Controller
 {
@@ -34,12 +37,17 @@ class GameController extends Controller
 
     public function show($name)
     {
-        $games = Game::where('name', 'like', '%' . $name . '%')->get();
         $data = [];
-        if (!is_null($games)) {
+        if (is_numeric($name)) {
+            $games = Game::find($name);
+            array_push($data, $this->build_show_response($games));
+        } else {
+            $games = Game::where('name', 'like', '%' . $name . '%')->get();
             foreach ($games as $game) {
                 array_push($data, $this->build_show_response($game));
             }
+        }
+        if (!is_null($games)) {
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
@@ -61,6 +69,10 @@ class GameController extends Controller
         if (is_object(json_decode($json))) {
             $user_id = json_decode($json)->user_id;
             if (Validation::adminValidate($user_id)) {
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
@@ -79,9 +91,9 @@ class GameController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array);
+                        $data = $this->prepare_update($params_array, $image_name);
                     } else {
-                        $data = $this->prepare_store($params_array);
+                        $data = $this->prepare_store($params_array, $image_name);
                     }
                 }
             } else {
@@ -124,7 +136,7 @@ class GameController extends Controller
         ];
     }
 
-    public function prepare_update($params_array)
+    public function prepare_update($params_array, $image)
     {
         $params_to_update = [
             'name' => $params_array['name'],
@@ -132,7 +144,7 @@ class GameController extends Controller
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
-            'image' => $params_array['image']
+            'image' => $image
         ];
         $id = $params_array['id'];
         unset($params_array['id']);
@@ -150,10 +162,10 @@ class GameController extends Controller
             'code' => 200,
             'status' => 'success',
             'message' => 'Game update successfull',
-            'game' => $params_array
+            'game' => [$params_to_update, 'Categories' => $categories]
         ];
     }
-    public function prepare_store($params_array)
+    public function prepare_store($params_array, $image)
     {
         $game = new Game();
         $game->name = $params_array['name'];
@@ -161,7 +173,7 @@ class GameController extends Controller
         $game->sinopsis = $params_array['sinopsis'];
         $game->out_date = $params_array['out_date'];
         $game->public_directed = $params_array['public_directed'];
-        $game->image = $params_array['image'];
+        $game->image = $image;
         $game->save();
         $categories = [];
         foreach ($params_array['categories'] as $category) {
