@@ -32,10 +32,11 @@ class MovieController extends Controller
             array_push($marks, $mark->pivot->mark);
         }
         foreach ($movie->directors_movies as $director) {
-            array_push($directors, $director->pivot->name);
+            
+            array_push($directors, $director->name);
         }
         foreach ($movie->actors_movies as $actor) {
-            array_push($actors, $actor->pivot->name);
+            array_push($actors, $actor->name);
         }
 
         return [

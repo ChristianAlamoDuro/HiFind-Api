@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Actor;
 use Illuminate\Support\Facades\DB;
+use App\Actor;
+use App\Movie;
+
 
 class SelectActorController extends Controller
 {
@@ -19,7 +21,8 @@ class SelectActorController extends Controller
             $data = [
                 'code' => 200,
                 'status' => 'success',
-                'actor' => Actor::where('id', '=', $params_array['id'])->get()
+                'actor' => Actor::where('id', '=', $params_array['id'])->get(),
+                
             ];
 
             $dataResponse = [
