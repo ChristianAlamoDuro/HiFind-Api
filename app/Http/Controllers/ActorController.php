@@ -16,6 +16,7 @@ class ActorController extends Controller
     public function build_show_response($actor)
     {
         return [
+            'id' => $actor->id,
             'name' => $actor->name,
             'surname' => $actor->surname, 
             'birthday' => $actor->birthday, 

@@ -13,7 +13,9 @@ class DeleteMovieController extends Controller
     {
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
+
         if (Movie::find($params_array['id'])) {
+            
             Movie::find($params_array['id'])->delete();
             $data = [
                 'code' => 200,

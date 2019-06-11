@@ -15,10 +15,9 @@ class Movie extends Model
 
     public function marks_movies()
     {
-        return $this->belongsToMany('App\User','marks_users_movies')->withPivot('user_id','mark');
+        return $this->belongsToMany('App\User','marks_users_movies')->withPivot('user_id', 'mark');
 
     }
-    
     public function directors_movies()
     {
         return $this->belongsToMany('App\Director', 'directors_movies', 'movie_id', 'director_id');

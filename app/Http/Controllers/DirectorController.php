@@ -14,8 +14,9 @@ use App\Validation;
 class DirectorController extends Controller
 {
     public function build_show_response($director)
-    {
+    {    
         return [
+            'id' => $director->id,
             'name' => $director->name,
             'surname' => $director->surname, 
             'birthday' => $director->birthday, 
@@ -104,14 +105,21 @@ class DirectorController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
 
-            $validate = \Validator::make($params_array, [
-                'name' => 'required',
-                'surname' => 'required',
-                'birthday' => 'required',
-                'biography' => 'required'
-            ]);
+
+                $validate = \Validator::make($params_array, [
+                    'name' => 'required',
+                    'surname' => 'required',
+                    'birthday' => 'required',
+                    'biography' => 'required'
+                ]);
 
             if ($validate->fails()) {
                 $data = [

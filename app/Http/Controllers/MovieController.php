@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Movie;
 use App\Category;
 use App\Validation;
@@ -29,28 +32,26 @@ class MovieController extends Controller
             array_push($marks, $mark->pivot->mark);
         }
         foreach ($movie->directors_movies as $director) {
-            array_push($directors, $director->pivot->name);
+            
+            array_push($directors, $director->name);
         }
         foreach ($movie->actors_movies as $actor) {
-            array_push($actors, $actor->pivot->name);
+            array_push($actors, $actor->name);
         }
 
         return [
-            'code' => 200,
-            'status' => 'success',
-            'movie' => [
-                'title' => $movie->title,
-                'out_date' => $movie->out_date,
-                'public_directed' => $movie->public_directed,
-                'film_producer' => $movie->film_producer,
-                'duration' => $movie->duration,
-                'sinopsis' => $movie->sinopsis,
-                'image' => $movie->image,
-                'categories' => $categories,
-                'marks' => $marks,
-                'directors' => $directors,
-                'actors' => $actors
-            ]
+            'id' => $movie->id,
+            'title' => $movie->title,
+            'out_date' => $movie->out_date, 
+            'public_directed' => $movie->public_directed, 
+            'film_producer' => $movie->film_producer, 
+            'duration' => $movie->duration,
+            'sinopsis' => $movie->sinopsis,
+            'image' => $movie->image,
+            'categories' => $categories,
+            'marks' => $marks,
+            'directors' => $directors,
+            'actors' => $actors
         ];
     }
 
@@ -103,7 +104,10 @@ class MovieController extends Controller
 
     public function store(Request $request)
     {
+
         $json = $request->input('json', null);
+
+       // var_dump($json); die();
 
         if (is_object(json_decode($json))) {
 
@@ -111,7 +115,14 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
+               /* $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; */
                 $params_array = json_decode($json, true);
+
                 $validate = \Validator::make($params_array, [
                     'title' => 'required',
                     'out_date' => 'required',
@@ -148,13 +159,13 @@ class MovieController extends Controller
                 'message' => 'Wrong data values'
             ];
         }
-        return response()->json($data);
+ return response()->json($data);
     }
 
     public function prepare_update($params_array)
     {
         $params_to_update = [
-            'title' => $params_array['name'],
+            'title' => $params_array['title'],
             'sinopsis' => $params_array['sinopsis'],
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
@@ -166,8 +177,8 @@ class MovieController extends Controller
         unset($params_array['id']);
         unset($params_array['created_at']);
 
-        $movie = Movies::where('id', $id)->update($params_to_update);
-        $movie = Movies::find($id);
+        $movie = Movie::where('id', $id)->update($params_to_update);
+        $movie = Movie::find($id);
 
         $categories = [];
         $directors = [];

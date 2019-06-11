@@ -171,8 +171,8 @@ CREATE TABLE categories_movies (
     category_id 	      int(255) not null,
 
     CONSTRAINT pk_categories_movies PRIMARY KEY (id),
-    CONSTRAINT fk_category_id_categories_movies FOREIGN KEY (category_id) REFERENCES categories (id),
-    CONSTRAINT fk_movie_id_categories_movies FOREIGN KEY (movie_id) REFERENCES movies (id)
+    CONSTRAINT fk_category_id_categories_movies FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_movie_id_categories_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE marks_users_movies (
@@ -181,8 +181,8 @@ CREATE TABLE marks_users_movies (
   user_id               int(255) NOT NULL,
   mark                  int(5) NOT NULL,
   CONSTRAINT pk_marks_users_movies PRIMARY KEY (id),
-  CONSTRAINT fk_movie_id_marks_users_movies FOREIGN KEY (movie_id) REFERENCES movies (id),
-  CONSTRAINT fk_user_id_marks_users_movies FOREIGN KEY (user_id) REFERENCES users (id)
+  CONSTRAINT fk_movie_id_marks_users_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_user_id_marks_users_movies FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 --
