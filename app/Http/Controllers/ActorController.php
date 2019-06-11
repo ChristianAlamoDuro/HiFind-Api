@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Actor;
 use App\Movie;
 use App\Validation;
@@ -107,6 +110,14 @@ class ActorController extends Controller
 
                 $params_array = json_decode($json, true);
 
+                $image = $request->file('image');
+                $extension = $image->getClientOriginalExtension();
+
+                Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
+               
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; 
+
+
             $validate = \Validator::make($params_array, [
                 'name' => 'required',
                 'surname' => 'required',
@@ -123,9 +134,9 @@ class ActorController extends Controller
             } else {
                 
                 if (isset($params_array['id'])) {
-                    $data = $this->prepare_update($params_array);
+                    $data = $this->prepare_update($params_array, $image_name);
                 } else {
-                    $data = $this->prepare_store($params_array);
+                    $data = $this->prepare_store($params_array, $image_name);
                 }
 
             }
@@ -148,14 +159,14 @@ class ActorController extends Controller
     }
 
 
-    public function prepare_update($params_array)
+    public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
             'name' => $params_array['name'],
             'surname' => $params_array['surname'],
             'birthday' => $params_array['birthday'],
             'biography' => $params_array['biography'],
-            'image' => $params_array['image']
+            'image' => $image_name
         ];
 
         $id = $params_array['id'];
@@ -183,26 +194,16 @@ class ActorController extends Controller
     }
 
 
-    public function prepare_store($params_array)
+    public function prepare_store($params_array, $image_name)
     {
         $actor = new Actor();
         $actor->name = $params_array['name'];
         $actor->surname = $params_array['surname'];
         $actor->birthday = $params_array['birthday'];
         $actor->biography = $params_array['biography'];
-        $actor->image = $params_array['image'];
+        $actor->image = $image_name;
         $actor->save();
 
-        $movies = [];
-
-        foreach ($params_array['movies'] as $movie) {
-
-            if (Movie::find($movie)) {
-                array_push($movies, $movie);
-            }
-
-        }
-        $actor->movies()->attach($movies);
         return  [
             'code' => 200,
             'status' => 'success',

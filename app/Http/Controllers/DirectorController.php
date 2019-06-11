@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Director;
 use App\Movie;
 use App\Validation;
@@ -130,9 +133,9 @@ class DirectorController extends Controller
             } else {
                 
                 if (isset($params_array['id'])) {
-                    $data = $this->prepare_update($params_array);
+                    $data = $this->prepare_update($params_array, $image_name);
                 } else {
-                    $data = $this->prepare_store($params_array);
+                    $data = $this->prepare_store($params_array, $image_name);
                 }
 
             }
@@ -155,14 +158,14 @@ class DirectorController extends Controller
     }
 
 
-    public function prepare_update($params_array)
+    public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
             'name' => $params_array['name'],
             'surname' => $params_array['surname'],
             'birthday' => $params_array['birthday'],
             'biography' => $params_array['biography'],
-            'image' => $params_array['image']
+            'image' => $image_name
         ];
 
         $id = $params_array['id'];
@@ -190,26 +193,16 @@ class DirectorController extends Controller
     }
 
 
-    public function prepare_store($params_array)
+    public function prepare_store($params_array, $image_name)
     {
         $director = new Director();
         $director->name = $params_array['name'];
         $director->surname = $params_array['surname'];
         $director->birthday = $params_array['birthday'];
         $director->biography = $params_array['biography'];
-        $director->image = $params_array['image'];
+        $director->image = $image_name;
         $director->save();
 
-        $movies = [];
-
-        foreach ($params_array['movies'] as $movie) {
-
-            if (Movie::find($movie)) {
-                array_push($movies, $movie);
-            }
-
-        }
-        $director->movies()->attach($movies);
         return  [
             'code' => 200,
             'status' => 'success',

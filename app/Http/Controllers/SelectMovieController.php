@@ -12,33 +12,25 @@ use App\Actor;
 
 class SelectMovieController extends Controller
 {
-    public function show(Request $request)
+    public function show($id)
     {
-        
-        $json = $request->input('json', null);
-        $params_array = json_decode($json, true);
 
+        $movieSelected = Movie::find($id);
         $data = [];
-
-        if (!is_null(Movie::where('id', '=', $params_array['id'])->get())){
+        if (!is_null($movieSelected)) {
 
             $movies = Movie::all();
 
             foreach ($movies as $movie) {
-            
-                if($movie['id'] = $params_array['id']){
-                    array_push($data, $this->build_show_response($movie));
-                    break;
-                }
- 
+                array_push($data, $this->build_show_response($movie));
+                break;
             }
 
             $dataResponse = [
-            'code' => 200,
-            'status' => 'success',
-            'movies' => $data
+                'code' => 200,
+                'status' => 'success',
+                'movies' => $data
             ];
-            
         } else {
             $dataResponse = [
                 'code' => 404,
@@ -47,7 +39,6 @@ class SelectMovieController extends Controller
             ];
         }
         return response()->json($dataResponse);
-
     }
 
     public function build_show_response($movie)
@@ -60,13 +51,10 @@ class SelectMovieController extends Controller
         foreach ($movie->categories_movies as $category) {
             array_push($categories, $category->name);
         }
-        
-        foreach ($movie->marks_movies as $mark) {
-            var_dump($mark);
-            array_push($marks, $mark->mark);
-            die();
-        }
 
+        foreach ($movie->marks_movies as $mark) {
+            array_push($marks, $mark->pivot->mark);
+        }
         foreach ($movie->directors_movies as $director) {
             array_push($directors, $director->name);
         }
@@ -78,9 +66,9 @@ class SelectMovieController extends Controller
         return [
             'id' => $movie->id,
             'title' => $movie->title,
-            'out_date' => $movie->out_date, 
-            'public_directed' => $movie->public_directed, 
-            'film_producer' => $movie->film_producer, 
+            'out_date' => $movie->out_date,
+            'public_directed' => $movie->public_directed,
+            'film_producer' => $movie->film_producer,
             'duration' => $movie->duration,
             'sinopsis' => $movie->sinopsis,
             'image' => $movie->image,
@@ -90,5 +78,5 @@ class SelectMovieController extends Controller
             'actors' => $actors
         ];
     }
-   
+
 }

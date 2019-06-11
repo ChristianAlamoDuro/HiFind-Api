@@ -17,7 +17,7 @@ use App\Actor;
 
 class MovieController extends Controller
 {
- 
+
     public function build_show_response($movie)
     {
         $categories = [];
@@ -75,11 +75,11 @@ class MovieController extends Controller
 
         return response()->json($dataResponse);
     }
-    
+
     public function show($title)
     {
-        $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
         
+        $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
         $data = [];
         if (!is_null($movies)) {
 
@@ -92,7 +92,6 @@ class MovieController extends Controller
                 'status' => 'success',
                 'movies' => $data
             ];
-            
         } else {
             $dataResponse = [
                 'code' => 404,
@@ -116,12 +115,12 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
-               /* $image = $request->file('image');
+                $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
 
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
                
-                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; */
+                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; 
                 $params_array = json_decode($json, true);
 
                 $validate = \Validator::make($params_array, [
@@ -132,7 +131,6 @@ class MovieController extends Controller
                     'duration' => 'required',
                     'sinopsis' => 'required'
                 ]);
-    
 
                 if ($validate->fails()) {
                     $data = [
@@ -142,9 +140,9 @@ class MovieController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array);
+                        $data = $this->prepare_update($params_array, $image_name);
                     } else {
-                        $data = $this->prepare_store($params_array);
+                        $data = $this->prepare_store($params_array, $image_name);
                     }
                 }
             } else {
@@ -164,7 +162,7 @@ class MovieController extends Controller
  return response()->json($data);
     }
 
-    public function prepare_update($params_array)
+    public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
             'title' => $params_array['title'],
@@ -173,7 +171,7 @@ class MovieController extends Controller
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
             'film_producer' => $params_array['film_producer'],
-            'image' => $params_array['image']
+            'image' => $image_name
         ];
         $id = $params_array['id'];
         unset($params_array['id']);
@@ -192,7 +190,7 @@ class MovieController extends Controller
             }
         }
         $movie->categories_movies()->sync($categories);
-        
+
         foreach ($params_array['directors'] as $director) {
             if (Director::find($director)) {
                 array_push($directors, $director);
@@ -217,7 +215,7 @@ class MovieController extends Controller
 
 
 
-    public function prepare_store($params_array)
+    public function prepare_store($params_array, $image_name)
     {
         $movie = new Movie();
         $movie->title = $params_array['title'];
@@ -226,7 +224,7 @@ class MovieController extends Controller
         $movie->sinopsis = $params_array['sinopsis'];
         $movie->out_date = $params_array['out_date'];
         $movie->public_directed = $params_array['public_directed'];
-        $movie->image = $params_array['image'];
+        $movie->image = $image_name;
         $movie->save();
 
         $categories = [];
