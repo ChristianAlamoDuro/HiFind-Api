@@ -44,6 +44,9 @@ Route::resource('/api/categories', 'CategoryController');
 # GET /api/games/{nombre de videojuego} #
 # Ruta que devuelve todas las ocurrencias encontradas en la busqueda #
 
+# GET /api/games/{id}
+# Ruta que devuelve todas la ocurrencias encontradas en la busqueda #
+
 # POST guardar /api/games #
 # En el body un json con los valores ejemplo json={"name":"forza horizon 4","sinopsis":"juego de carreras to guapo","duration":"0","out_date":"2019-10-14 00:00:00","public_directed":"+16","image":"not found","categories":[1,2]} #
 
@@ -89,7 +92,6 @@ Route::resource('/api/mark_game', 'MarkGameController');
 Route::resource('/api/delete/game', 'DeleteGameController');
 #POST /api/delete/game/ id de juego a eliminar ejemplo  {"id":1}
 Route::resource('/api/delete/category', 'DeleteCategoryController');
-
 
 
 #GET /api/movies

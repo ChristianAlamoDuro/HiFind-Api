@@ -62,35 +62,37 @@ class CategoryController extends Controller
             $user_id = json_decode($json)->user_id;
             if (Validation::adminValidate($user_id)) {
                 $params_array = json_decode($json, true);
-                $validate = \Validator::make($params_array, [
-                    'name' => 'required',
-                    'special_category' => 'required'
-                ]);
-
-                if ($validate->fails()) {
-                    $data = [
-                        'code' => 400,
-                        'status' => 'succes',
-                        'message' => 'Validation error'
-                    ];
-                } else {
-                    if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array);
+                $category = Category::where('name', 'like', '%' . $params_array['name'] . '%')->where($params_array['special_category'], 1)->get();
+                if (!empty($category)) {
+                    $validate = \Validator::make($params_array, [
+                        'name' => 'required',
+                        'special_category' => 'required'
+                    ]);
+                    if ($validate->fails()) {
+                        $data = [
+                            'code' => 400,
+                            'status' => 'success',
+                            'message' => 'Validation error'
+                        ];
                     } else {
-                        $data = $this->prepare_store($params_array);
+                        if (isset($params_array['id'])) {
+                            $data = $this->prepare_update($params_array);
+                        } else {
+                            $data = $this->prepare_store($params_array);
+                        }
                     }
                 }
             } else {
                 $data = [
                     'code' => 404,
-                    'status' => 'error',
+                    'status' => 'Error',
                     'message' => 'Error this user role dont have permission'
                 ];
             }
         } else {
             $data = [
                 'code' => 404,
-                'status' => 'error',
+                'status' => 'Error',
                 'message' => 'Wrong data value'
             ];
         }

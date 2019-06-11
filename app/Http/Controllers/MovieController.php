@@ -14,7 +14,7 @@ use App\Actor;
 
 class MovieController extends Controller
 {
- 
+
     public function build_show_response($movie)
     {
         $categories = [];
@@ -34,15 +34,15 @@ class MovieController extends Controller
         foreach ($movie->actors_movies as $actor) {
             array_push($actors, $actor->pivot->name);
         }
-        
+
         return [
             'code' => 200,
             'status' => 'success',
             'movie' => [
                 'title' => $movie->title,
-                'out_date' => $movie->out_date, 
-                'public_directed' => $movie->public_directed, 
-                'film_producer' => $movie->film_producer, 
+                'out_date' => $movie->out_date,
+                'public_directed' => $movie->public_directed,
+                'film_producer' => $movie->film_producer,
                 'duration' => $movie->duration,
                 'sinopsis' => $movie->sinopsis,
                 'image' => $movie->image,
@@ -74,11 +74,11 @@ class MovieController extends Controller
 
         return response()->json($dataResponse);
     }
-    
+
     public function show($title)
     {
         $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
-        
+
         $data = [];
         if (!is_null($movies)) {
 
@@ -91,7 +91,6 @@ class MovieController extends Controller
                 'status' => 'success',
                 'movies' => $data
             ];
-            
         } else {
             $dataResponse = [
                 'code' => 404,
@@ -121,7 +120,6 @@ class MovieController extends Controller
                     'duration' => 'required',
                     'sinopsis' => 'required'
                 ]);
-    
 
                 if ($validate->fails()) {
                     $data = [
@@ -150,7 +148,7 @@ class MovieController extends Controller
                 'message' => 'Wrong data values'
             ];
         }
-
+        return response()->json($data);
     }
 
     public function prepare_update($params_array)
@@ -161,7 +159,7 @@ class MovieController extends Controller
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
             'duration' => $params_array['duration'],
-            'film_producer' => $params_to_update['film_producer'],
+            'film_producer' => $params_array['film_producer'],
             'image' => $params_array['image']
         ];
         $id = $params_array['id'];
@@ -181,7 +179,7 @@ class MovieController extends Controller
             }
         }
         $movie->categories_movies()->sync($categories);
-        
+
         foreach ($params_array['directors'] as $director) {
             if (Director::find($director)) {
                 array_push($directors, $director);
