@@ -32,7 +32,7 @@ class MovieController extends Controller
             array_push($marks, $mark->pivot->mark);
         }
         foreach ($movie->directors_movies as $director) {
-            
+
             array_push($directors, $director->name);
         }
         foreach ($movie->actors_movies as $actor) {
@@ -42,9 +42,9 @@ class MovieController extends Controller
         return [
             'id' => $movie->id,
             'title' => $movie->title,
-            'out_date' => $movie->out_date, 
-            'public_directed' => $movie->public_directed, 
-            'film_producer' => $movie->film_producer, 
+            'out_date' => $movie->out_date,
+            'public_directed' => $movie->public_directed,
+            'film_producer' => $movie->film_producer,
             'duration' => $movie->duration,
             'sinopsis' => $movie->sinopsis,
             'image' => $movie->image,
@@ -78,15 +78,17 @@ class MovieController extends Controller
 
     public function show($title)
     {
-        
-        $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
         $data = [];
-        if (!is_null($movies)) {
-
+        if (!is_numeric($title)) {
+            $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
             foreach ($movies as $movie) {
                 array_push($data, $this->build_show_response($movie));
             }
-
+        } else {
+            $movies = Movie::find($title);
+            array_push($data, $this->build_show_response($movies));
+        }
+        if (!is_null($movies)) {
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
@@ -107,7 +109,7 @@ class MovieController extends Controller
 
         $json = $request->input('json', null);
 
-       // var_dump($json); die();
+        // var_dump($json); die();
 
         if (is_object(json_decode($json))) {
 
@@ -115,7 +117,7 @@ class MovieController extends Controller
 
             if (Validation::adminValidate($user_id)) {
 
-               /* $image = $request->file('image');
+                /* $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
 
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
@@ -125,7 +127,7 @@ class MovieController extends Controller
 
                 $validate = \Validator::make($params_array, [
                     'title' => 'required',
-                    'out_date' => 'required',
+                    'out_date' => 'required|date_format:Y-m-d',
                     'public_directed' => 'required',
                     'film_producer' => 'required',
                     'duration' => 'required',
@@ -159,7 +161,7 @@ class MovieController extends Controller
                 'message' => 'Wrong data values'
             ];
         }
- return response()->json($data);
+        return response()->json($data);
     }
 
     public function prepare_update($params_array)
