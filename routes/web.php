@@ -38,13 +38,6 @@ Route::resource('/api/categories', 'CategoryController');
 # Ruta que devuelve todos los juegos #
 # GET /api/games/{nombre de videojuego} #
 # Ruta que devuelve todas las ocurrencias encontradas en la busqueda #
-<<<<<<< HEAD
-
-# GET /api/games/{id}
-# Ruta que devuelve todas la ocurrencias encontradas en la busqueda #
-
-=======
->>>>>>> 76cf265e090004dd06b1ad4ebedf9676b9949146
 # POST guardar /api/games #
 # En el body un json con los valores ejemplo json={"name":"forza horizon 4","sinopsis":"juego de carreras to guapo","duration":"0","out_date":"2019-10-14 00:00:00","public_directed":"+16","image":"not found","categories":[1,2]} #
 # POST actualizar /api/games #
@@ -52,11 +45,8 @@ Route::resource('/api/categories', 'CategoryController');
 Route::resource('/api/games', 'GameController');
 
 
-<<<<<<< HEAD
-=======
 #####  DOCUMENTACIÓN PARA LAS RUTAS DE PELICULAS  #####
 
->>>>>>> 76cf265e090004dd06b1ad4ebedf9676b9949146
 #GET /api/movies
 #Ruta que devuelve el listado completo de películas con sus categorías
 #GET /api/movies/{titulo de película}

@@ -78,8 +78,8 @@ class MovieController extends Controller
 
     public function show($title)
     {
+        
         $movies = Movie::where('title', 'like', '%' . $title . '%')->get();
-
         $data = [];
         if (!is_null($movies)) {
 

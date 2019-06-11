@@ -12,27 +12,18 @@ use App\Actor;
 
 class SelectMovieController extends Controller
 {
-    public function store(Request $request)
+    public function show($id)
     {
 
-        $json = $request->input('json', null);
-        $params_array = json_decode($json, true);
-
-
-
-        $movieSelected = Movie::where('id', '=', $params_array['id'])->get();
+        $movieSelected = Movie::find($id);
         $data = [];
-
         if (!is_null($movieSelected)) {
 
             $movies = Movie::all();
 
             foreach ($movies as $movie) {
-
-                if ($movie['id'] = $params_array['id']) {
-                    array_push($data, $this->build_show_response($movie));
-                    break;
-                }
+                array_push($data, $this->build_show_response($movie));
+                break;
             }
 
             $dataResponse = [
@@ -62,10 +53,8 @@ class SelectMovieController extends Controller
         }
 
         foreach ($movie->marks_movies as $mark) {
-            var_dump($mark);
-            array_push($marks, $mark->mark);
+            array_push($marks, $mark->pivot->mark);
         }
-        die();
         foreach ($movie->directors_movies as $director) {
             array_push($directors, $director->name);
         }
