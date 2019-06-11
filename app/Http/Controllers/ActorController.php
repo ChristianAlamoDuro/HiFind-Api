@@ -15,13 +15,15 @@ class ActorController extends Controller
 {
     public function build_show_response($actor)
     {
+        $movies = $actor->movies;
         return [
             'id' => $actor->id,
             'name' => $actor->name,
-            'surname' => $actor->surname, 
-            'birthday' => $actor->birthday, 
+            'surname' => $actor->surname,
+            'birthday' => $actor->birthday,
             'image' => $actor->image,
-            'biography' => $actor->biography
+            'biography' => $actor->biography,
+            'movies' => $movies
         ];
     }
 
@@ -44,54 +46,57 @@ class ActorController extends Controller
 
         return response()->json($dataResponse);
     }
-   
+
     public function show($info)
     {
-      
+
         $words = explode("-", $info);
         $data = [];
         $bool = false;
+        if (!is_numeric($info)) {
+            if (!is_null($words)) {
+                foreach ($words as $word) {
 
-        if (!is_null($words)){
-            foreach ($words as $word) {
-       
-                $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
-                   
-                    if (count($actorsByName)>0){
+                    $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
+
+                    if (count($actorsByName) > 0) {
                         $bool = true;
-                        foreach ($actorsByName as $actor) { 
+                        foreach ($actorsByName as $actor) {
                             array_push($data, $this->build_show_response($actor));
-                        }   
-                    }
-                   
-        
-                $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
-        
-                    if (count($actorsBySurname)>0){
-                        $bool = true;
-                        foreach ($actorsBySurname as $actor) { 
-                        array_push($data, $this->build_show_response($actor));
                         }
                     }
-                    
+
+                    $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
+
+                    if (count($actorsBySurname) > 0) {
+                        $bool = true;
+                        foreach ($actorsBySurname as $actor) {
+                            array_push($data, $this->build_show_response($actor));
+                        }
+                    }
                 }
-                
-                if ($bool == false){
+
+                if ($bool == false) {
                     $dataResponse = [
                         'code' => 200,
                         'status' => 'success',
                         'actors' => $data
                     ];
                 }
+            } else {
+                $dataResponse = [
+                    'code' => 404,
+                    'status' => 'error',
+                    'message' => 'actor not found'
+                ];
+            }
+        } else {
+            $actor = Actor::find($info);
+            array_push($data, $this->build_show_response($actor));
         }
-        else {
-            $dataResponse = [
-                'code' => 404,
-                'status' => 'error',
-                'message' => 'actor not found'
-            ];
-        }
-        
+
+
+
         return response()->json($data);
     }
 
@@ -107,29 +112,28 @@ class ActorController extends Controller
 
                 $params_array = json_decode($json, true);
 
-            $validate = \Validator::make($params_array, [
-                'name' => 'required',
-                'surname' => 'required',
-                'birthday' => 'required',
-                'biography' => 'required'
-            ]);
+                $validate = \Validator::make($params_array, [
+                    'name' => 'required',
+                    'surname' => 'required',
+                    'birthday' => 'required|date_format:Y-m-d',
+                    'biography' => 'required'
+                ]);
 
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'Error',
-                    'message' => 'Data validation was not correct'
-                ];
-            } else {
-                
-                if (isset($params_array['id'])) {
-                    $data = $this->prepare_update($params_array);
+                if ($validate->fails()) {
+                    $data = [
+                        'code' => 400,
+                        'status' => 'Error',
+                        'message' => 'Data validation was not correct'
+                    ];
                 } else {
-                    $data = $this->prepare_store($params_array);
-                }
 
-            }
-        } else {
+                    if (isset($params_array['id'])) {
+                        $data = $this->prepare_update($params_array);
+                    } else {
+                        $data = $this->prepare_store($params_array);
+                    }
+                }
+            } else {
                 $data = [
                     'code' => 404,
                     'status' => 'error',
@@ -159,7 +163,7 @@ class ActorController extends Controller
         ];
 
         $id = $params_array['id'];
-        
+
         unset($params_array['id']);
         unset($params_array['created_at']);
 
@@ -200,7 +204,6 @@ class ActorController extends Controller
             if (Movie::find($movie)) {
                 array_push($movies, $movie);
             }
-
         }
         $actor->movies()->attach($movies);
         return  [
@@ -210,5 +213,4 @@ class ActorController extends Controller
             'actor' => $actor
         ];
     }
-
 }

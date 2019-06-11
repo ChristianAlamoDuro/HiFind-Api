@@ -72,11 +72,11 @@ class GameController extends Controller
                 $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
-                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension;
+                $image_name = "/public/storage/img/" . $image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
-                    'out_date' => 'required',
+                    'out_date' => 'required|date_format:Y-m-d',
                     'public_directed' => 'required',
                     'duration' => 'required',
                     'sinopsis' => 'required',
