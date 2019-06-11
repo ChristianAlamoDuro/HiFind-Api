@@ -12,18 +12,15 @@ use App\Actor;
 
 class SelectMovieController extends Controller
 {
-    public function store(Request $request)
+    public function show(Request $request)
     {
         
         $json = $request->input('json', null);
         $params_array = json_decode($json, true);
-       
 
-        
-        $movieSelected = Movie::where('id', '=', $params_array['id'])->get(); 
         $data = [];
 
-        if (!is_null($movieSelected)){
+        if (!is_null(Movie::where('id', '=', $params_array['id'])->get())){
 
             $movies = Movie::all();
 
@@ -93,38 +90,5 @@ class SelectMovieController extends Controller
             'actors' => $actors
         ];
     }
-
-
-
-
-
-
-
-            /*$movie = Movie::where('id', '=', $params_array['id'])->get(); 
-
-            $movie->actors_movies()->attach($categories);
-
-            array_push($actors, $actor);
-
-            $data = [
-                'code' => 200,
-                'status' => 'success',
-                'movie' => $movie
-            ];
-
-            $dataResponse = [
-                'code' => 200,
-                'status' => 'success',
-                'movie' => $data
-            ];
-            
-        } else {
-            $data = [
-                'code' => 400,
-                'status' => 'error',
-                'message' => 'Movie not found'
-            ];
-        }
-        return response()->json($data);*/
    
 }
