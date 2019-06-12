@@ -18,13 +18,15 @@ class ActorController extends Controller
 {
     public function build_show_response($actor)
     {
+        $movies = $actor->movies;
         return [
             'id' => $actor->id,
             'name' => $actor->name,
-            'surname' => $actor->surname, 
-            'birthday' => $actor->birthday, 
+            'surname' => $actor->surname,
+            'birthday' => $actor->birthday,
             'image' => $actor->image,
-            'biography' => $actor->biography
+            'biography' => $actor->biography,
+            'movies' => $movies
         ];
     }
 
@@ -47,54 +49,78 @@ class ActorController extends Controller
 
         return response()->json($dataResponse);
     }
-   
+
     public function show($info)
     {
-      
-        $words = explode("-", $info);
+
+        $words = explode("_", $info);
         $data = [];
         $bool = false;
+        $idsInsertados = [];
 
-        if (!is_null($words)){
-            foreach ($words as $word) {
-       
-                $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
-                   
-                    if (count($actorsByName)>0){
+
+        if (!is_numeric($info)) {
+            if (!is_null($words)) {
+                foreach ($words as $word) {
+
+                    $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
+
+                    if (count($actorsByName) > 0) {
                         $bool = true;
-                        foreach ($actorsByName as $actor) { 
-                            array_push($data, $this->build_show_response($actor));
-                        }   
+                        foreach ($actorsByName as $actor) {
+                           
+                            if (!in_array($actor->id, $idsInsertados)){
+                                array_push($data, $this->build_show_response($actor));
+                                array_push($idsInsertados, $actor->id);
+                             }
+                        }
+                      
                     }
-                   
-        
-                $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
-        
-                    if (count($actorsBySurname)>0){
+
+                    $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
+
+                    if (count($actorsBySurname) > 0) {
                         $bool = true;
-                        foreach ($actorsBySurname as $actor) { 
-                        array_push($data, $this->build_show_response($actor));
+                        foreach ($actorsBySurname as $actor) {
+
+                            if (!in_array($actor->id, $idsInsertados)){
+                                array_push($data, $this->build_show_response($actor));
+                                array_push($idsInsertados, $actor->id);
+                             }
+
                         }
                     }
-                    
                 }
-                
-                if ($bool == false){
+
+                if ($bool == true) {
                     $dataResponse = [
                         'code' => 200,
                         'status' => 'success',
                         'actors' => $data
                     ];
                 }
+                else{
+                    $data = [
+                        'code' => 404,
+                        'status' => 'error',
+                        'message' => 'actor not found'
+                    ];
+                }
+            } else {
+                $dataResponse = [
+                    'code' => 404,
+                    'status' => 'error',
+                    'message' => 'No words entered or incorrect format'
+                ];
+            }
+        } else {
+            $actor = Actor::find($info);
+            array_push($data, $this->build_show_response($actor));
+            $data = array_unique($data);
         }
-        else {
-            $dataResponse = [
-                'code' => 404,
-                'status' => 'error',
-                'message' => 'actor not found'
-            ];
-        }
-        
+
+
+
         return response()->json($data);
     }
 
@@ -139,8 +165,8 @@ class ActorController extends Controller
                     $data = $this->prepare_store($params_array, $image_name);
                 }
 
-            }
-        } else {
+                }
+            } else {
                 $data = [
                     'code' => 404,
                     'status' => 'error',
@@ -170,7 +196,7 @@ class ActorController extends Controller
         ];
 
         $id = $params_array['id'];
-        
+
         unset($params_array['id']);
         unset($params_array['created_at']);
 
@@ -211,5 +237,4 @@ class ActorController extends Controller
             'actor' => $actor
         ];
     }
-
 }
