@@ -76,7 +76,7 @@ class GameController extends Controller
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
-                    'out_date' => 'required|date_format:d-m-Y',
+                    'out_date' => 'required|date_format:d/m/Y',
                     'public_directed' => 'required',
                     'duration' => 'required',
                     'sinopsis' => 'required',
