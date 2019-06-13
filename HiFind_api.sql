@@ -192,68 +192,66 @@ CREATE TABLE marks_users_movies (
 
 --
 -- Estructura de tabla para la tabla `users`
---
+-- --
 INSERT INTO `users` (`id`, `username`, `role`, `email`, `password`, `image`, `created_at`, `updated_at`, `remember_token`) VALUES
-(1, 'admin', 'ROLE_ADMIN', 'admin@admin.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, NULL, NULL, NULL),
-(2, 'Chrisatm13', 'ROLE_USER', 'chrisatm13@chrisatm13.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, NULL, NULL, NULL),
-(3, 'john', 'ROLE_USER', 'pepito@gmail.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, '2019-05-23 07:49:08', '2019-05-23 07:49:08', NULL);
+(1, 'admin', 'ROLE_ADMIN', 'admin@admin.com', '2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b', NULL, NULL, NULL, NULL);
 
-INSERT INTO `games` (`id`, `name`, `out_date`, `public_directed`, `duration`, `sinopsis`, `image`) VALUES
-(1, 'Red dead redemption', '2019-05-30 00:00:00', '+18', '1.5', 'Juego de matar a caballo oeste gromenaguer', NULL),
-(2, 'forza horizon 3', '2019-10-14 00:00:00', '+16', '0', 'juego de carreras to guapo', 'not found'),
-(3, 'red hot chillippeper the game', '2019-05-30 00:00:00', '+18', '2', 'asafaf', 'not found'),
-(8, 'forza horizon 4', '2019-10-14 00:00:00', '+16', '0', 'juego de carreras to guapo', 'not found'),
-(39, 'Kingdom hearts 3', '2019-02-10 00:00:00', 'TP', '30', 'Juego de square enix ambientadp en el universo disney', 'not found');
+-- INSERT INTO `games` (`id`, `name`, `out_date`, `public_directed`, `duration`, `sinopsis`, `image`) VALUES
+-- (1, 'Red dead redemption', '2019-05-30 00:00:00', '+18', '1.5', 'Juego de matar a caballo oeste gromenaguer', NULL),
+-- (2, 'forza horizon 3', '2019-10-14 00:00:00', '+16', '0', 'juego de carreras to guapo', 'not found'),
+-- (3, 'red hot chillippeper the game', '2019-05-30 00:00:00', '+18', '2', 'asafaf', 'not found'),
+-- (8, 'forza horizon 4', '2019-10-14 00:00:00', '+16', '0', 'juego de carreras to guapo', 'not found'),
+-- (39, 'Kingdom hearts 3', '2019-02-10 00:00:00', 'TP', '30', 'Juego de square enix ambientadp en el universo disney', 'not found');
 
 
-INSERT INTO `categories` (`id`, `name`, `is_movie`, `is_special_movie`, `is_special_game`, `is_game`) VALUES
-(1, 'Aventuras', 0, NULL, 0, 1),
-(2, 'Accion', 0, NULL, 0, 1),
-(3, 'infantil', 0, NULL, 0, 0),
-(4, 'tiros', 0, NULL, 0, 1);
+-- INSERT INTO `categories` (`id`, `name`, `is_movie`, `is_special_movie`, `is_special_game`, `is_game`) VALUES
+-- (1, 'Aventuras', 0, NULL, 0, 1),
+-- (2, 'Accion', 0, NULL, 0, 1),
+-- (3, 'infantil', 0, NULL, 0, 0),
+-- (4, 'tiros', 0, NULL, 0, 1);
 
 
-INSERT INTO `categories_games` (`id`, `game_id`, `categorie_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 3, 3),
-(4, 8, 1),
-(5, 8, 2),
-(6, 39, 1),
-(7, 39, 3);
+-- INSERT INTO `categories_games` (`id`, `game_id`, `categorie_id`) VALUES
+-- (1, 1, 1),
+-- (2, 1, 2),
+-- (3, 3, 3),
+-- (4, 8, 1),
+-- (5, 8, 2),
+-- (6, 39, 1),
+-- (7, 39, 3);
 
 
-INSERT INTO `marks_users_games` (`id`, `game_id`, `user_id`, `mark`) VALUES
-(1, 1, 2, 10),
-(2, 1, 2, 10),
-(3, 1, 3, 7);
+-- INSERT INTO `marks_users_games` (`id`, `game_id`, `user_id`, `mark`) VALUES
+-- (1, 1, 2, 10),
+-- (2, 1, 2, 10),
+-- (3, 1, 3, 7);
 
-INSERT INTO `actors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES
-(4, 'johny', 'melavo', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
-(5, 'juan', 'pene flacido', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
+-- INSERT INTO `actors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES
+-- (4, 'johny', 'melavo', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
+-- (5, 'juan', 'pene flacido', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
 
-INSERT INTO `directors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES 
-(1, 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 'Scorsese.png'), 
-(2, 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
+-- INSERT INTO `directors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES 
+-- (1, 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 'Scorsese.png'), 
+-- (2, 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
 
-INSERT INTO `movies` (`id`, `title`, `out_date`, `public_directed`, `film_producer`, `duration`, `sinopsis`, `image`) VALUES 
-('1', 'the lord of the ring the fellowship of the ring', '2019-03-03 00:00:00', '12', 'no clue', '228', 'The Lord of the Rings: The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson based on the first volume of J. R. R. Tolkiens The Lord of the Rings.', 'lotr.png'), 
-('2', 'Best movie', '2019-10-17', '7', 'besrt producer', '120', 'best movie sinopsis', 'best.png');
+-- INSERT INTO `movies` (`id`, `title`, `out_date`, `public_directed`, `film_producer`, `duration`, `sinopsis`, `image`) VALUES 
+-- ('1', 'the lord of the ring the fellowship of the ring', '2019-03-03 00:00:00', '12', 'no clue', '228', 'The Lord of the Rings: The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson based on the first volume of J. R. R. Tolkiens The Lord of the Rings.', 'lotr.png'), 
+-- ('2', 'Best movie', '2019-10-17', '7', 'besrt producer', '120', 'best movie sinopsis', 'best.png');
 
-INSERT INTO `actors_movies` (`id`, `actor_id`, `movie_id`) VALUES 
-('1', '1', '1'), 
-('2', '2', '2');
+-- INSERT INTO `actors_movies` (`id`, `actor_id`, `movie_id`) VALUES 
+-- ('1', '1', '1'), 
+-- ('2', '2', '2');
 
-INSERT INTO `directors_movies` (`id`, `director_id`, `movie_id`) VALUES 
-('1', '1', '2'), 
-('2', '2', '1');
+-- INSERT INTO `directors_movies` (`id`, `director_id`, `movie_id`) VALUES 
+-- ('1', '1', '2'), 
+-- ('2', '2', '1');
 
-INSERT INTO `categories_movies` (`id`, `movie_id`, `category_id`) VALUES 
-('1', '1', '2'), 
-('2', '2', '3');
+-- INSERT INTO `categories_movies` (`id`, `movie_id`, `category_id`) VALUES 
+-- ('1', '1', '2'), 
+-- ('2', '2', '3');
 
-INSERT INTO `marks_users_movies` (`id`, `movie_id`, `user_id`, `mark`) VALUES 
-('1', '2', '1', '9'), 
-('2', '1', '2', '10');
+-- INSERT INTO `marks_users_movies` (`id`, `movie_id`, `user_id`, `mark`) VALUES 
+-- ('1', '2', '1', '9'), 
+-- ('2', '1', '2', '10');
 
 COMMIT;

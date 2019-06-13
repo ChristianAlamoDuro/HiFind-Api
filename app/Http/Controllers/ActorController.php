@@ -131,9 +131,8 @@ class ActorController extends Controller
             $user_id = json_decode($json)->user_id;
 
             if (Validation::adminValidate($user_id)) {
-
+                
                 $params_array = json_decode($json, true);
-
                 $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
 
@@ -145,7 +144,7 @@ class ActorController extends Controller
             $validate = \Validator::make($params_array, [
                 'name' => 'required',
                 'surname' => 'required',
-                'birthday' => 'required',
+                'birthday' => 'required|date_format:d/m/Y',
                 'biography' => 'required'
             ]);
 

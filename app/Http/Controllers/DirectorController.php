@@ -153,7 +153,7 @@ class DirectorController extends Controller
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
                     'surname' => 'required',
-                    'birthday' => 'required|date_format:d-m-Y',
+                    'birthday' => 'required|date_format:d/m/Y',
                     'biography' => 'required'
                 ]);
 
