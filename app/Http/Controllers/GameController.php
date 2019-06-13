@@ -86,7 +86,7 @@ class GameController extends Controller
                 if ($validate->fails()) {
                     $data = [
                         'code' => 404,
-                        'status' => 'Error',
+                        'status' => 'error',
                         'message' => 'Validation error'
                     ];
                 } else {
@@ -99,14 +99,14 @@ class GameController extends Controller
             } else {
                 $data = [
                     'code' => 404,
-                    'status' => 'Error',
+                    'status' => 'error',
                     'message' => 'Error this user role dont have permission'
                 ];
             }
         } else {
             $data = [
                 'code' => 404,
-                'status' => 'Error',
+                'status' => 'error',
                 'message' => 'Wrong data values'
             ];
         }
