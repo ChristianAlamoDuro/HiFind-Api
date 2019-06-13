@@ -76,7 +76,7 @@ class GameController extends Controller
                 $params_array = json_decode($json, true);
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
-                    'out_date' => 'required|date_format:Y-m-d',
+                    'out_date' => 'required|date_format:d-m-Y',
                     'public_directed' => 'required',
                     'duration' => 'required',
                     'sinopsis' => 'required',
@@ -85,8 +85,8 @@ class GameController extends Controller
 
                 if ($validate->fails()) {
                     $data = [
-                        'code' => 400,
-                        'status' => 'success',
+                        'code' => 404,
+                        'status' => 'Error',
                         'message' => 'Validation error'
                     ];
                 } else {
@@ -99,14 +99,14 @@ class GameController extends Controller
             } else {
                 $data = [
                     'code' => 404,
-                    'status' => 'error',
+                    'status' => 'Error',
                     'message' => 'Error this user role dont have permission'
                 ];
             }
         } else {
             $data = [
                 'code' => 404,
-                'status' => 'error',
+                'status' => 'Error',
                 'message' => 'Wrong data values'
             ];
         }

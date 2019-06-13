@@ -23,7 +23,7 @@ class SpecialCategoryGameController extends Controller
             $games = array_unique($games);
             $data = [
                 'code' => 200,
-                'status' => 'succes',
+                'status' => 'success',
                 'Games' => $games
             ];
         } else {

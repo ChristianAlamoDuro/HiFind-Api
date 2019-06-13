@@ -111,9 +111,9 @@ ALTER TABLE `marks_users_games`
 
 CREATE TABLE directors(
     id                  int(255) auto_increment not null,
-    name	              varchar(20) not null,
-    surname             varchar(100),
-    birthday            date DEFAULT NULL,
+    name	              varchar(255) not null,
+    surname             varchar(255),
+    birthday            varchar(255) DEFAULT NULL,
     biography           varchar(255),
     image               varchar(255),
     CONSTRAINT pk_directors PRIMARY KEY (id)
@@ -122,9 +122,9 @@ CREATE TABLE directors(
 
 CREATE TABLE actors(
     id                  int(255) auto_increment not null,
-    name	              varchar(20) not null,
-    surname             varchar(100),
-    birthday            date DEFAULT NULL,
+    name	              varchar(255) not null,
+    surname             varchar(255),
+    birthday            varchar(255) DEFAULT NULL,
     biography           varchar(255),
     image               varchar(255),
     CONSTRAINT pk_actors PRIMARY KEY (id)
@@ -133,7 +133,7 @@ CREATE TABLE actors(
 CREATE TABLE movies(
     id                  int(255) auto_increment not null,
     title	              varchar(255) not null,
-    out_date            date DEFAULT NULL,
+    out_date            varchar(20) DEFAULT NULL,
     public_directed     varchar(3) DEFAULT NULL,
     film_producer       varchar(255) DEFAULT NULL,
     duration            float DEFAULT NULL,
@@ -229,12 +229,12 @@ INSERT INTO `marks_users_games` (`id`, `game_id`, `user_id`, `mark`) VALUES
 (3, 1, 3, 7);
 
 INSERT INTO `actors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES
-('1', 'frodo', 'Baggins', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
-('2', 'Samwise', 'Gamgee', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
+(4, 'johny', 'melavo', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
+(5, 'juan', 'pene flacido', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
 
 INSERT INTO `directors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES 
-('1', 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 
-'Scorsese.png'), ('2', 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
+(1, 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 'Scorsese.png'), 
+(2, 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
 
 INSERT INTO `movies` (`id`, `title`, `out_date`, `public_directed`, `film_producer`, `duration`, `sinopsis`, `image`) VALUES 
 ('1', 'the lord of the ring the fellowship of the ring', '2019-03-03 00:00:00', '12', 'no clue', '228', 'The Lord of the Rings: The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson based on the first volume of J. R. R. Tolkiens The Lord of the Rings.', 'lotr.png'), 

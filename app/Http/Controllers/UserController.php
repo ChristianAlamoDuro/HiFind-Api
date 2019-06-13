@@ -29,7 +29,6 @@ class UserController extends Controller
                     'errors' => $validate->errors()
                 );
             }else {
-
                 $pwd = hash('sha256',$params_array['password']);
                 $user = new User();
                 $user->username = $params_array['username'];
