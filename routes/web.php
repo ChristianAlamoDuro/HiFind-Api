@@ -128,3 +128,6 @@ Route::resource('/api/delete/movie', 'DeleteMovieController');
 #Recibe un JSON con el id del actor que se desea eliminar
 Route::resource('/api/delete/actor', 'DeleteActorController');
 
+#POST /api/delete/director 
+#Recibe un JSON con el id del director que se desea eliminar
+Route::resource('/api/delete/director', 'DeleteDirectorController');
