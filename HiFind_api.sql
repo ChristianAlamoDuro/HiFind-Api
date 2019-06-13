@@ -111,9 +111,9 @@ ALTER TABLE `marks_users_games`
 
 CREATE TABLE directors(
     id                  int(255) auto_increment not null,
-    name	              varchar(20) not null,
-    surname             varchar(100),
-    birthday            date DEFAULT NULL,
+    name	              varchar(255) not null,
+    surname             varchar(255),
+    birthday            varchar(255) DEFAULT NULL,
     biography           varchar(255),
     image               varchar(255),
     CONSTRAINT pk_directors PRIMARY KEY (id)
@@ -122,9 +122,9 @@ CREATE TABLE directors(
 
 CREATE TABLE actors(
     id                  int(255) auto_increment not null,
-    name	              varchar(20) not null,
-    surname             varchar(100),
-    birthday            date DEFAULT NULL,
+    name	              varchar(255) not null,
+    surname             varchar(255),
+    birthday            varchar(255) DEFAULT NULL,
     biography           varchar(255),
     image               varchar(255),
     CONSTRAINT pk_actors PRIMARY KEY (id)
@@ -133,7 +133,7 @@ CREATE TABLE actors(
 CREATE TABLE movies(
     id                  int(255) auto_increment not null,
     title	              varchar(255) not null,
-    out_date            date DEFAULT NULL,
+    out_date            varchar(20) DEFAULT NULL,
     public_directed     varchar(3) DEFAULT NULL,
     film_producer       varchar(255) DEFAULT NULL,
     duration            float DEFAULT NULL,
