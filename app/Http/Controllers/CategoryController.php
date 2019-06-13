@@ -71,7 +71,7 @@ class CategoryController extends Controller
                     if ($validate->fails()) {
                         $data = [
                             'code' => 400,
-                            'status' => 'success',
+                            'status' => 'Error',
                             'message' => 'Validation error'
                         ];
                     } else {

@@ -53,35 +53,31 @@ class ActorController extends Controller
         $words = explode("-", $info);
         $data = [];
         $bool = false;
+        $ids = [];
         if (!is_numeric($info)) {
             if (!is_null($words)) {
                 foreach ($words as $word) {
-
                     $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
-
-                    if (count($actorsByName) > 0) {
-                        $bool = true;
-                        foreach ($actorsByName as $actor) {
-                            array_push($data, $this->build_show_response($actor));
-                        }
-                    }
-
                     $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
-
-                    if (count($actorsBySurname) > 0) {
-                        $bool = true;
-                        foreach ($actorsBySurname as $actor) {
-                            array_push($data, $this->build_show_response($actor));
-                        }
+                    foreach ($actorsByName as $value) {
+                        array_push($ids, $value->id);
                     }
-                }
-
-                if ($bool == false) {
-                    $dataResponse = [
-                        'code' => 200,
-                        'status' => 'success',
-                        'actors' => $data
-                    ];
+                    foreach ($actorsBySurname as $value) {
+                        array_push($ids, $value->id);
+                    }
+                    array_unique($ids);
+                    $actors = Actor::findMany($ids);
+                    
+                    foreach ($actors as $actor) {
+                        array_push($data, $this->build_show_response($actor));
+                    }
+                    if ($bool == false) {
+                        $dataResponse = [
+                            'code' => 200,
+                            'status' => 'success',
+                            'actors' => $data
+                        ];
+                    }
                 }
             } else {
                 $dataResponse = [
@@ -94,7 +90,6 @@ class ActorController extends Controller
             $actor = Actor::find($info);
             array_push($data, $this->build_show_response($actor));
         }
-
 
 
         return response()->json($data);
@@ -115,7 +110,7 @@ class ActorController extends Controller
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
                     'surname' => 'required',
-                    'birthday' => 'required|date_format:Y-m-d',
+                    'birthday' => 'required|date_format:d-m-Y',
                     'biography' => 'required'
                 ]);
 

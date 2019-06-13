@@ -127,7 +127,7 @@ class MovieController extends Controller
 
                 $validate = \Validator::make($params_array, [
                     'title' => 'required',
-                    'out_date' => 'required|date_format:Y-m-d',
+                    'out_date' => 'required|date_format:d-m-Y',
                     'public_directed' => 'required',
                     'film_producer' => 'required',
                     'duration' => 'required',

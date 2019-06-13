@@ -25,7 +25,7 @@ class SpecialCategoryMovieController extends Controller
                 
                 $data = [
                     'code' => 200,
-                    'status' => 'succes',
+                    'status' => 'success',
                     'movies' => $movies
                 ];
             } else {

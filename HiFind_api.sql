@@ -229,12 +229,12 @@ INSERT INTO `marks_users_games` (`id`, `game_id`, `user_id`, `mark`) VALUES
 (3, 1, 3, 7);
 
 INSERT INTO `actors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES
-('1', 'frodo', 'Baggins', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
-('2', 'Samwise', 'Gamgee', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
+(4, 'johny', 'melavo', '2019-10-14', 'Hero of the middle earth.', 'frodo.png'),
+(5, 'juan', 'pene flacido', '2019-10-15', 'Savior of Frodo. Hero of the middle earth.', 'sam.png');
 
 INSERT INTO `directors` (`id`, `name`, `surname`, `birthday`, `biography`, `image`) VALUES 
-('1', 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 
-'Scorsese.png'), ('2', 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
+(1, 'Martin', 'Scorsese', '2019-10-16', 'Director of the wold of Wall Street and others.', 'Scorsese.png'), 
+(2, 'Steven', 'Soderbergh', '2019-05-14 00:00:00', 'Director of Oceans eleven and others.', 'Steven.png');
 
 INSERT INTO `movies` (`id`, `title`, `out_date`, `public_directed`, `film_producer`, `duration`, `sinopsis`, `image`) VALUES 
 ('1', 'the lord of the ring the fellowship of the ring', '2019-03-03 00:00:00', '12', 'no clue', '228', 'The Lord of the Rings: The Fellowship of the Ring is a 2001 epic fantasy adventure film directed by Peter Jackson based on the first volume of J. R. R. Tolkiens The Lord of the Rings.', 'lotr.png'), 
