@@ -20,7 +20,7 @@ class CategoryController extends Controller
 
         $collection = collect($categories_special);
         $categories_special = $collection->sortBy('special_category');
-        $categories_special = $categories_special->toArray();
+        $categories_special = $categories_special->values()->all();
 
         return response()->json([
             'code' => 200,

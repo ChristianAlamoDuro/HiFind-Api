@@ -40,7 +40,7 @@ class DirectorController extends Controller
         }
         $collection = collect($data);
         $data = $collection->sortBy('name');
-        $data = $data->toArray();
+        $data = $data->values()->all();
         $dataResponse = [
             'code' => 200,
             'status' => 'success',
