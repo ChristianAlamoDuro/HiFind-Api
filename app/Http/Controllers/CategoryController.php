@@ -18,9 +18,9 @@ class CategoryController extends Controller
             array_push($categories_special, $this->prepare_category($category));
         }
 
-        $collection = collect($categories_special);
-        $categories_special = $collection->sortBy('special_category');
-        $categories_special = $categories_special->values()->all();
+        // $collection = collect($categories_special);
+        // $categories_special = $collection->sortBy('special_category');
+        // $categories_special = $categories_special->values()->all();
 
         return response()->json([
             'code' => 200,
@@ -45,9 +45,9 @@ class CategoryController extends Controller
             array_push($categories_special, $this->prepare_category($category));
         }
         if (isset($category)) {
-            $collection = collect($categories_special);
-            $categories_special = $collection->sortBy('special_category');
-            $categories_special = $categories_special->toArray();
+            // $collection = collect($categories_special);
+            // $categories_special = $collection->sortBy('special_category');
+            // $categories_special = $categories_special->values()->all();
             $data = [
                 'code' => 200,
                 'status' => 'success',

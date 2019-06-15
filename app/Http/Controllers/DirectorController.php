@@ -55,7 +55,6 @@ class DirectorController extends Controller
 
         $words = explode("_", $info);
         $data = [];
-        $bool = false;
         $idsInsertados = [];
 
         if (!is_numeric($info)) {
@@ -66,56 +65,50 @@ class DirectorController extends Controller
 
                     $directorsByName = Director::where('name', 'like', '%' . $word . '%')->get();
                     $directorsBySurname = Director::where('surname', 'like', '%' . $word . '%')->get();
-                    
+
 
                     if (count($directorsByName) > 0) {
-                       
+
                         $bool = true;
                         foreach ($directorsByName as $director) {
 
-                            if (!in_array($director->id, $idsInsertados)){
+                            if (!in_array($director->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($director));
                                 array_push($idsInsertados, $director->id);
-                             }
-                           
+                            }
+
                             //var_dump($idsInsertados); die();
                         }
-                        
                     }
-                  
+
                     if (count($directorsBySurname) > 0) {
-                        
+
                         $bool = true;
                         foreach ($directorsBySurname as $director) {
 
-                           // var_dump($director->id, $idsInsertados); die();
-                             if (!in_array($director->id, $idsInsertados)){
+                            // var_dump($director->id, $idsInsertados); die();
+                            if (!in_array($director->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($director));
                                 array_push($idsInsertados, $director->id);
-                             }
-                                
-                             
+                            }
                         }
                     }
                 }
-                
 
-                if ($bool == true) {
+
+                if (!empty($data)) {
                     $dataResponse = [
                         'code' => 200,
                         'status' => 'success',
                         'directors' => $data
                     ];
-                }
-                else{
-                    $data = [
+                } else {
+                    $dataResponse = [
                         'code' => 404,
                         'status' => 'error',
-                        'message' => 'director not found'
+                        'message' => 'Director not found'
                     ];
                 }
-
-
             } else {
                 $dataResponse = [
                     'code' => 404,
@@ -125,9 +118,9 @@ class DirectorController extends Controller
             }
         } else {
             $director = Director::find($info);
-            array_push($data, $this->build_show_response($director));
+            $dataResponse = array_push($data, $this->build_show_response($director));
         }
-        return response()->json($data);
+        return response()->json($dataResponse);
     }
 
     public function store(Request $request)
@@ -156,27 +149,27 @@ class DirectorController extends Controller
                     'biography' => 'required'
                 ]);
 
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'error',
-                    'message' => 'Data validation was not correct'
-                ];
-            } else {
-                
-                if (isset($params_array['id'])) {
-                    if (Director::find($params_array['id']) != NULL) {
-                        $data = $this->prepare_update($params_array, $image_name);
-                    }else{
-                        $data = [
-                            'code' => 404,
-                            'status' => 'error',
-                            'message' => 'Director not found to update'
-                        ];
-                    }
+                if ($validate->fails()) {
+                    $data = [
+                        'code' => 400,
+                        'status' => 'error',
+                        'message' => 'Data validation was not correct'
+                    ];
                 } else {
-                    $data = $this->prepare_store($params_array, $image_name);
-                }
+
+                    if (isset($params_array['id'])) {
+                        if (Director::find($params_array['id']) != NULL) {
+                            $data = $this->prepare_update($params_array, $image_name);
+                        } else {
+                            $data = [
+                                'code' => 404,
+                                'status' => 'error',
+                                'message' => 'Director not found to update'
+                            ];
+                        }
+                    } else {
+                        $data = $this->prepare_store($params_array, $image_name);
+                    }
                 }
             } else {
                 $data = [
