@@ -15,7 +15,7 @@ class CategoryController extends Controller
         $categories_special = [];
         foreach ($categories as $category) {
             array_push($categories_special, $this->prepare_category($category));
-        }
+        } 
         return response()->json([
             'code' => 200,
             'status' => 'succes',
@@ -39,6 +39,7 @@ class CategoryController extends Controller
             array_push($categories_special, $this->prepare_category($category));
         }
         if (isset($category)) {
+          
             $data = [
                 'code' => 200,
                 'status' => 'succes',
@@ -76,7 +77,15 @@ class CategoryController extends Controller
                         ];
                     } else {
                         if (isset($params_array['id'])) {
-                            $data = $this->prepare_update($params_array);
+                            if (Category::find($params_array['id']) != NULL) {
+                                $data = $this->prepare_update($params_array);
+                            }else{
+                                $data = [
+                                    'code' => 404,
+                                    'status' => 'error',
+                                    'message' => 'Category not found to update'
+                                ];
+                            }
                         } else {
                             $data = $this->prepare_store($params_array);
                         }
