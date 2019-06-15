@@ -63,16 +63,16 @@ class MovieController extends Controller
         foreach ($movies as $movie) {
             array_push($data, $this->build_show_response($movie));
         }
+        
+        $collection = collect($data);
+        $data = $collection->sortBy('name');
+        $data = $data->toArray();
+
         $dataResponse = [
             'code' => 200,
             'status' => 'success',
             'movies' => $data
         ];
-        $data = [
-            'code' => 200,
-            'status' => 'success',
-        ];
-
         return response()->json($dataResponse);
     }
 
@@ -119,8 +119,8 @@ class MovieController extends Controller
                 $extension = $image->getClientOriginalExtension();
 
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
-               
-                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; 
+
+                $image_name = "/public/storage/img/" . $image->getFilename() . '.' . $extension;
                 $params_array = json_decode($json, true);
 
                 $validate = \Validator::make($params_array, [
@@ -142,7 +142,7 @@ class MovieController extends Controller
                     if (isset($params_array['id'])) {
                         if (Movie::find($params_array['id']) != NULL) {
                             $data = $this->prepare_update($params_array, $image_name);
-                        }else{
+                        } else {
                             $data = [
                                 'code' => 404,
                                 'status' => 'error',
@@ -173,7 +173,7 @@ class MovieController extends Controller
     public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
-            'title' => $params_array['title'],
+            'title' => ucfirst($params_array['title']),
             'sinopsis' => $params_array['sinopsis'],
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
@@ -226,7 +226,7 @@ class MovieController extends Controller
     public function prepare_store($params_array, $image_name)
     {
         $movie = new Movie();
-        $movie->title = $params_array['title'];
+        $movie->title = ucfirst($params_array['title']);
         $movie->duration = $params_array['duration'];
         $movie->film_producer = $params_array['film_producer'];
         $movie->sinopsis = $params_array['sinopsis'];

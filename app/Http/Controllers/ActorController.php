@@ -37,14 +37,15 @@ class ActorController extends Controller
         foreach ($actors as $actor) {
             array_push($data, $this->build_show_response($actor));
         }
+
+        $collection = collect($data);
+        $data = $collection->sortBy('name');
+        $data = $data->toArray();
+
         $dataResponse = [
             'code' => 200,
             'status' => 'success',
             'actors' => $data
-        ];
-        $data = [
-            'code' => 200,
-            'status' => 'success',
         ];
 
         return response()->json($dataResponse);
@@ -129,13 +130,11 @@ class ActorController extends Controller
 
             if (Validation::adminValidate($user_id)) {
                 $params_array = json_decode($json, true);
+
                 $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
-
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
-
                 $image_name = "/public/storage/img/" . $image->getFilename() . '.' . $extension;
-
 
                 $validate = \Validator::make($params_array, [
                     'name' => 'required',
@@ -147,7 +146,7 @@ class ActorController extends Controller
                 if ($validate->fails()) {
                     $data = [
                         'code' => 400,
-                        'status' => 'Error',
+                        'status' => 'error',
                         'message' => 'Data validation was not correct'
                     ];
                 } else {
@@ -155,7 +154,7 @@ class ActorController extends Controller
                     if (isset($params_array['id'])) {
                         if (Actor::find($params_array['id']) != NULL) {
                             $data = $this->prepare_update($params_array, $image_name);
-                        }else{
+                        } else {
                             $data = [
                                 'code' => 404,
                                 'status' => 'error',
@@ -188,7 +187,7 @@ class ActorController extends Controller
     public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
-            'name' => $params_array['name'],
+            'name' => ucfirst($params_array['name']),
             'surname' => $params_array['surname'],
             'birthday' => $params_array['birthday'],
             'biography' => $params_array['biography'],
@@ -222,7 +221,7 @@ class ActorController extends Controller
     public function prepare_store($params_array, $image_name)
     {
         $actor = new Actor();
-        $actor->name = $params_array['name'];
+        $actor->name = ucfirst($params_array['name']);
         $actor->surname = $params_array['surname'];
         $actor->birthday = $params_array['birthday'];
         $actor->biography = $params_array['biography'];

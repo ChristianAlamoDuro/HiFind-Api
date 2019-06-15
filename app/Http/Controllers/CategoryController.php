@@ -11,14 +11,20 @@ class CategoryController extends Controller
 {
     public function index()
     {
+
         $categories = Category::all();
         $categories_special = [];
         foreach ($categories as $category) {
             array_push($categories_special, $this->prepare_category($category));
-        } 
+        }
+
+        $collection = collect($categories_special);
+        $categories_special = $collection->sortBy('special_category');
+        $categories_special = $categories_special->toArray();
+
         return response()->json([
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'categories' => $categories_special
         ]);
     }
@@ -39,10 +45,12 @@ class CategoryController extends Controller
             array_push($categories_special, $this->prepare_category($category));
         }
         if (isset($category)) {
-          
+            $collection = collect($categories_special);
+            $categories_special = $collection->sortBy('special_category');
+            $categories_special = $categories_special->toArray();
             $data = [
                 'code' => 200,
-                'status' => 'succes',
+                'status' => 'success',
                 'category' => $categories_special
             ];
         } else {
@@ -72,14 +80,14 @@ class CategoryController extends Controller
                     if ($validate->fails()) {
                         $data = [
                             'code' => 400,
-                            'status' => 'Error',
+                            'status' => 'error',
                             'message' => 'Validation error'
                         ];
                     } else {
                         if (isset($params_array['id'])) {
                             if (Category::find($params_array['id']) != NULL) {
                                 $data = $this->prepare_update($params_array);
-                            }else{
+                            } else {
                                 $data = [
                                     'code' => 404,
                                     'status' => 'error',
@@ -94,14 +102,14 @@ class CategoryController extends Controller
             } else {
                 $data = [
                     'code' => 404,
-                    'status' => 'Error',
+                    'status' => 'error',
                     'message' => 'Error this user role dont have permission'
                 ];
             }
         } else {
             $data = [
                 'code' => 404,
-                'status' => 'Error',
+                'status' => 'error',
                 'message' => 'Wrong data value'
             ];
         }
@@ -122,13 +130,13 @@ class CategoryController extends Controller
 
         Category::where('id', $id)->update($params_to_update);
         $params_to_update = [
-            'name' => $params_array['name'],
+            'name' => ucfirst($params_array['name']),
             $params_array['special_category'] => true
         ];
         Category::where('id', $id)->update($params_to_update);
         return [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'message' => 'Categoría actualizada satisfactoriamente',
             'category' => $params_to_update
         ];
@@ -138,12 +146,12 @@ class CategoryController extends Controller
     {
         $special_category = $params_array['special_category'];
         $category = new Category();
-        $category->name = $params_array['name'];
+        $category->name = ucfirst($params_array['name']);
         $category->$special_category = 1;
         $category->save();
         return [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'message' => 'Categoría guardada satisfactoriamente',
             'category' => $category
         ];
