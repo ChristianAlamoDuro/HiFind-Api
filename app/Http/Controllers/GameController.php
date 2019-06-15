@@ -48,7 +48,7 @@ class GameController extends Controller
         if (!is_null($games)) {
             $collection = collect($data);
             $data = $collection->sortBy('name');
-            $data = $data->toArray();
+            $data = $data = $data->values()->all();
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
