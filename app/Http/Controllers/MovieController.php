@@ -140,7 +140,15 @@ class MovieController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array, $image_name);
+                        if (Movie::find($params_array['id']) != NULL) {
+                            $data = $this->prepare_update($params_array, $image_name);
+                        }else{
+                            $data = [
+                                'code' => 404,
+                                'status' => 'error',
+                                'message' => 'Movie not found to update'
+                            ];
+                        }
                     } else {
                         $data = $this->prepare_store($params_array, $image_name);
                     }

@@ -21,14 +21,11 @@ class GameController extends Controller
         foreach ($games as $game) {
             array_push($data, $this->build_show_response($game));
         }
+        $data = collect($data)->sortBy('name');
         $dataResponse = [
             'code' => 200,
             'status' => 'succes',
             'games' => $data
-        ];
-        $data = [
-            'code' => 200,
-            'status' => 'succes',
         ];
 
         return response()->json($dataResponse);
@@ -48,12 +45,14 @@ class GameController extends Controller
             }
         }
         if (!is_null($games)) {
+            $data = collect($data)->sortBy('name');
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
                 'games' => $data
             ];
         } else {
+
             $dataResponse = [
                 'code' => 404,
                 'status' => 'error',
@@ -91,7 +90,15 @@ class GameController extends Controller
                     ];
                 } else {
                     if (isset($params_array['id'])) {
-                        $data = $this->prepare_update($params_array, $image_name);
+                        if (Game::find($params_array['id']) != NULL) {
+                            $data = $this->prepare_update($params_array, $image_name);
+                        }else{
+                            $data = [
+                                'code' => 404,
+                                'status' => 'error',
+                                'message' => 'Game not found to update'
+                            ];
+                        }
                     } else {
                         $data = $this->prepare_store($params_array, $image_name);
                     }

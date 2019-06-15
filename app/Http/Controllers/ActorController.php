@@ -67,13 +67,12 @@ class ActorController extends Controller
                     if (count($actorsByName) > 0) {
                         $bool = true;
                         foreach ($actorsByName as $actor) {
-                           
-                            if (!in_array($actor->id, $idsInsertados)){
+
+                            if (!in_array($actor->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($actor));
                                 array_push($idsInsertados, $actor->id);
-                             }
+                            }
                         }
-                      
                     }
 
                     $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
@@ -82,11 +81,10 @@ class ActorController extends Controller
                         $bool = true;
                         foreach ($actorsBySurname as $actor) {
 
-                            if (!in_array($actor->id, $idsInsertados)){
+                            if (!in_array($actor->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($actor));
                                 array_push($idsInsertados, $actor->id);
-                             }
-
+                            }
                         }
                     }
                 }
@@ -97,8 +95,7 @@ class ActorController extends Controller
                         'status' => 'success',
                         'actors' => $data
                     ];
-                }
-                else{
+                } else {
                     $data = [
                         'code' => 404,
                         'status' => 'error',
@@ -131,37 +128,43 @@ class ActorController extends Controller
             $user_id = json_decode($json)->user_id;
 
             if (Validation::adminValidate($user_id)) {
-                
                 $params_array = json_decode($json, true);
                 $image = $request->file('image');
                 $extension = $image->getClientOriginalExtension();
 
                 Storage::disk('uploads')->put($image->getFilename() . '.' . $extension,  File::get($image));
-               
-                $image_name = "/public/storage/img/".$image->getFilename() . '.' . $extension; 
+
+                $image_name = "/public/storage/img/" . $image->getFilename() . '.' . $extension;
 
 
-            $validate = \Validator::make($params_array, [
-                'name' => 'required',
-                'surname' => 'required',
-                'birthday' => 'required|date_format:d/m/Y',
-                'biography' => 'required'
-            ]);
+                $validate = \Validator::make($params_array, [
+                    'name' => 'required',
+                    'surname' => 'required',
+                    'birthday' => 'required|date_format:d/m/Y',
+                    'biography' => 'required'
+                ]);
 
-            if ($validate->fails()) {
-                $data = [
-                    'code' => 400,
-                    'status' => 'Error',
-                    'message' => 'Data validation was not correct'
-                ];
-            } else {
-                
-                if (isset($params_array['id'])) {
-                    $data = $this->prepare_update($params_array, $image_name);
+                if ($validate->fails()) {
+                    $data = [
+                        'code' => 400,
+                        'status' => 'Error',
+                        'message' => 'Data validation was not correct'
+                    ];
                 } else {
-                    $data = $this->prepare_store($params_array, $image_name);
-                }
 
+                    if (isset($params_array['id'])) {
+                        if (Actor::find($params_array['id']) != NULL) {
+                            $data = $this->prepare_update($params_array, $image_name);
+                        }else{
+                            $data = [
+                                'code' => 404,
+                                'status' => 'error',
+                                'message' => 'Actor not found to update'
+                            ];
+                        }
+                    } else {
+                        $data = $this->prepare_store($params_array, $image_name);
+                    }
                 }
             } else {
                 $data = [
@@ -201,7 +204,6 @@ class ActorController extends Controller
         $actor = Actor::find($id);
 
         $movies = [];
-
         foreach ($params_array['movies'] as $movie) {
             if (Movie::find($movie)) {
                 array_push($movies, $movie);
