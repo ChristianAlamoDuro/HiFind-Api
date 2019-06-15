@@ -56,7 +56,6 @@ class ActorController extends Controller
 
         $words = explode("_", $info);
         $data = [];
-        $bool = false;
         $idsInsertados = [];
 
 
@@ -66,9 +65,7 @@ class ActorController extends Controller
                     $actorsByName = Actor::where('name', 'like', '%' . $word . '%')->get();
 
                     if (count($actorsByName) > 0) {
-                        $bool = true;
                         foreach ($actorsByName as $actor) {
-
                             if (!in_array($actor->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($actor));
                                 array_push($idsInsertados, $actor->id);
@@ -79,9 +76,7 @@ class ActorController extends Controller
                     $actorsBySurname = Actor::where('surname', 'like', '%' . $word . '%')->get();
 
                     if (count($actorsBySurname) > 0) {
-                        $bool = true;
                         foreach ($actorsBySurname as $actor) {
-
                             if (!in_array($actor->id, $idsInsertados)) {
                                 array_push($data, $this->build_show_response($actor));
                                 array_push($idsInsertados, $actor->id);
@@ -90,17 +85,17 @@ class ActorController extends Controller
                     }
                 }
 
-                if ($bool == true) {
+                if (!empty($data)) {
                     $dataResponse = [
                         'code' => 200,
                         'status' => 'success',
                         'actors' => $data
                     ];
                 } else {
-                    $data = [
+                    $dataResponse = [
                         'code' => 404,
                         'status' => 'error',
-                        'message' => 'actor not found'
+                        'message' => 'Actor not found'
                     ];
                 }
             } else {
@@ -113,11 +108,11 @@ class ActorController extends Controller
         } else {
             $actor = Actor::find($info);
             array_push($data, $this->build_show_response($actor));
-            $data = array_unique($data);
+            $dataResponse = array_unique($data);
         }
 
 
-        return response()->json($data);
+        return response()->json($dataResponse);
     }
 
     public function store(Request $request)
