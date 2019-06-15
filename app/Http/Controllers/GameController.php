@@ -21,10 +21,12 @@ class GameController extends Controller
         foreach ($games as $game) {
             array_push($data, $this->build_show_response($game));
         }
-        $data = collect($data)->sortBy('name');
+        $collection = collect($data);
+        $data = $collection->sortBy('name');
+        $data = $data->toArray();
         $dataResponse = [
             'code' => 200,
-            'status' => 'succes',
+            'status' => 'success',
             'games' => $data
         ];
 
@@ -45,7 +47,9 @@ class GameController extends Controller
             }
         }
         if (!is_null($games)) {
-            $data = collect($data)->sortBy('name');
+            $collection = collect($data);
+            $data = $collection->sortBy('name');
+            $data = $data->toArray();
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
@@ -92,7 +96,7 @@ class GameController extends Controller
                     if (isset($params_array['id'])) {
                         if (Game::find($params_array['id']) != NULL) {
                             $data = $this->prepare_update($params_array, $image_name);
-                        }else{
+                        } else {
                             $data = [
                                 'code' => 404,
                                 'status' => 'error',
@@ -146,7 +150,7 @@ class GameController extends Controller
     public function prepare_update($params_array, $image)
     {
         $params_to_update = [
-            'name' => $params_array['name'],
+            'name' => ucfirst($params_array['name']),
             'sinopsis' => $params_array['sinopsis'],
             'out_date' => $params_array['out_date'],
             'public_directed' => $params_array['public_directed'],
@@ -175,7 +179,7 @@ class GameController extends Controller
     public function prepare_store($params_array, $image)
     {
         $game = new Game();
-        $game->name = $params_array['name'];
+        $game->name = ucfirst($params_array['name']);
         $game->duration = $params_array['duration'];
         $game->sinopsis = $params_array['sinopsis'];
         $game->out_date = $params_array['out_date'];

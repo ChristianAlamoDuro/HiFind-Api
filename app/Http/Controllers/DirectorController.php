@@ -38,14 +38,13 @@ class DirectorController extends Controller
         foreach ($directors as $director) {
             array_push($data, $this->build_show_response($director));
         }
+        $collection = collect($data);
+        $data = $collection->sortBy('name');
+        $data = $data->toArray();
         $dataResponse = [
             'code' => 200,
             'status' => 'success',
             'directors' => $data
-        ];
-        $data = [
-            'code' => 200,
-            'status' => 'success',
         ];
 
         return response()->json($dataResponse);
@@ -160,7 +159,7 @@ class DirectorController extends Controller
             if ($validate->fails()) {
                 $data = [
                     'code' => 400,
-                    'status' => 'Error',
+                    'status' => 'error',
                     'message' => 'Data validation was not correct'
                 ];
             } else {
@@ -201,7 +200,7 @@ class DirectorController extends Controller
     public function prepare_update($params_array, $image_name)
     {
         $params_to_update = [
-            'name' => $params_array['name'],
+            'name' => ucfirst($params_array['name']),
             'surname' => $params_array['surname'],
             'birthday' => $params_array['birthday'],
             'biography' => $params_array['biography'],
@@ -236,7 +235,7 @@ class DirectorController extends Controller
     public function prepare_store($params_array, $image_name)
     {
         $director = new Director();
-        $director->name = $params_array['name'];
+        $director->name = ucfirst($params_array['name']);
         $director->surname = $params_array['surname'];
         $director->birthday = $params_array['birthday'];
         $director->biography = $params_array['biography'];
