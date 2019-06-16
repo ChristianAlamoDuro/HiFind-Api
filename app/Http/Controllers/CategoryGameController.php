@@ -12,21 +12,23 @@ class CategoryGameController extends Controller
 
     public function show($name)
     {
-        $games = [];
+        $game_data = [];
         if (is_numeric($name)) {
             $category = Category::find($name);
-            array_push($games, $this->build_game_response($category));
+            foreach ($category->games as $game) {
+                array_push($game_data, $this->build_show_response($game));
+            }
         } else {
             $categories = Category::where('name', $name)->get();
             if (sizeof($categories) != 0) {
-                $games = $this->build_game_response($categories);
+                $game_data = $this->build_game_response($categories);
             }
         }
-        if (!empty($games)) {
+        if (!empty($game_data)) {
             $data = [
                 'code' => 200,
                 'status' => 'succes',
-                'Games' => $games
+                'Games' => $game_data
             ];
         } else {
             $data = [
@@ -43,9 +45,32 @@ class CategoryGameController extends Controller
         $data_array = [];
         foreach ($categories as $category) {
             foreach ($category->games as $game) {
-                array_push($data_array, Game::find($game->id));
+                array_push($data_array, $this->build_show_response($game));
             }
         }
         return $data_array;
+    }
+
+    public function build_show_response($game)
+    {
+        $categories = [];
+        $marks = [];
+        foreach ($game->categories as $category) {
+            array_push($categories, $category->name);
+        }
+        foreach ($game->marks_games as $mark) {
+            array_push($marks, $mark->pivot->mark);
+        }
+        return [
+            'name' => $game->name,
+            'sinopsis' => $game->sinopsis,
+            'out_date' => $game->out_date,
+            'public_directed' => $game->public_directed,
+            'duration' => $game->duration,
+            'image' => $game->image,
+            'categories' => $categories,
+            'marks' => $marks,
+            'id' => $game->id
+        ];
     }
 }
