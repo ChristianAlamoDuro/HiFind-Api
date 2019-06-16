@@ -19,9 +19,7 @@ class CategoryGameController extends Controller
         } else {
             $categories = Category::where('name', $name)->get();
             if (sizeof($categories) != 0) {
-                foreach ($categories as $category) {
-                    array_push($games, $this->build_game_response($category));
-                }
+                $games = $this->build_game_response($categories);
             }
         }
         if (!empty($games)) {
@@ -40,11 +38,13 @@ class CategoryGameController extends Controller
         return response()->json($data);
     }
 
-    public function build_game_response($category)
+    public function build_game_response($categories)
     {
         $data_array = [];
-        foreach ($category->games as $game) {
-            array_push($data_array, Game::find($game->id));
+        foreach ($categories as $category) {
+            foreach ($category->games as $game) {
+                array_push($data_array, Game::find($game->id));
+            }
         }
         return $data_array;
     }
