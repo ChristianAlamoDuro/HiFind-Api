@@ -202,16 +202,6 @@ class DirectorController extends Controller
         unset($params_array['created_at']);
 
         $director = Director::where('id', $id)->update($params_to_update);
-        $director = Director::find($id);
-
-        $movies = [];
-
-        foreach ($params_array['movies'] as $movie) {
-            if (Movie::find($movie)) {
-                array_push($movies, $movie);
-            }
-        }
-        $director->movies()->sync($movies);
         return [
             'code' => 200,
             'status' => 'success',
