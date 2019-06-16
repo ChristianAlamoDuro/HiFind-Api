@@ -14,21 +14,11 @@ class CategoryMovieController extends Controller
 
     public function show($name)
     {
-<<<<<<< HEAD
         $movie_data = [];
         if (is_numeric($name)) {
             $category = Category::find($name);
             foreach ($category->movies as $movie) {
                 array_push($movie_data, $this->build_show_response($movie));
-=======
-        $categories = Category::where('name', 'like', '%' . $name . '%')->get();
-        $movies=[];
-        if (count($categories)>0){
-            foreach ($categories as $category) {
-                foreach ($category->movies as $movie) {
-                    array_push($movie, Movie::find($movie->id));
-                }
->>>>>>> 8c16041651c8fde498fba81a38a212a6b146428b
             }
         } else {
             $categories = Category::where('name', $name)->get();
@@ -77,7 +67,6 @@ class CategoryMovieController extends Controller
             array_push($marks, $mark->pivot->mark);
         }
         foreach ($movie->directors_movies as $director) {
-
             array_push($directors, $director->name);
         }
         foreach ($movie->actors_movies as $actor) {
