@@ -69,7 +69,6 @@ class DirectorController extends Controller
 
                     if (count($directorsByName) > 0) {
 
-                        $bool = true;
                         foreach ($directorsByName as $director) {
 
                             if (!in_array($director->id, $idsInsertados)) {
@@ -82,8 +81,6 @@ class DirectorController extends Controller
                     }
 
                     if (count($directorsBySurname) > 0) {
-
-                        $bool = true;
                         foreach ($directorsBySurname as $director) {
 
                             // var_dump($director->id, $idsInsertados); die();
@@ -94,7 +91,6 @@ class DirectorController extends Controller
                         }
                     }
                 }
-
 
                 if (!empty($data)) {
                     $dataResponse = [
@@ -118,7 +114,7 @@ class DirectorController extends Controller
             }
         } else {
             $director = Director::find($info);
-            $dataResponse = array_push($data, $this->build_show_response($director));
+            $dataResponse = $this->build_show_response($director);
         }
         return response()->json($dataResponse);
     }
