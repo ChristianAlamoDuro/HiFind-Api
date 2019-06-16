@@ -3,47 +3,82 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\response;
 use App\Movie;
 use App\Category;
+use App\Actor;
+use App\Director;
 
 class SpecialCategoryMovieController extends Controller
 {
+
     public function show($name)
     {
-        if ($name == "is_movie" || $name == "is_game" || $name == "is_special_movie" || $name == "is_special_game"){
-            $movies = [];
-            $categories = Category::where($name, true)->get();
-            if (!empty($categories)) {
-                foreach ($categories as $category) {
-                    foreach ($category->movies as $movie) {
-                       
-                        array_push($movies, Movie::find($movie->id));
-                    }
-                }
-                $movies = array_unique($movies);
-                
-                $data = [
-                    'code' => 200,
-                    'status' => 'success',
-                    'movies' => $movies
-                ];
-            } else {
-                $data = [
-                    'code' => 404,
-                    'status' => 'error',
-                    'message' => 'movie not found'
-                ];
-            }
-        }
-        else {
+        $categories = Category::where($name, true)->get();
+        
+        if (!empty($categories)) {
+            $movies=$this->build_movie_response($categories);
+            $data = [
+                'code' => 200,
+                'status' => 'success',
+                'movies' => $movies
+            ];
+        } else {
             $data = [
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'wrong special category'
+                'message' => 'movie not found'
             ];
         }
-        
         return response()->json($data);
+    }
+
+    public function build_movie_response($categories)
+    {
+        $data_array = [];
+        foreach ($categories as $category) {
+            foreach ($category->movies as $movie) {
+                array_push($data_array, $this->build_show_response($movie));
+            }
+        }
+        return $data_array;
+    }
+
+    public function build_show_response($movie)
+    {
+        $categories = [];
+        $marks = [];
+        $actors = [];
+        $directors = [];
+
+
+        foreach ($movie->categories as $category) {
+            array_push($categories, $category->name);
+        }
+        foreach ($movie->marks_movies as $mark) {
+            array_push($marks, $mark->pivot->mark);
+        }
+        foreach ($movie->directors_movies as $director) {
+            array_push($directors, $director->name);
+        }
+        foreach ($movie->actors_movies as $actor) {
+            array_push($actors, $actor->name);
+        }
+
+
+        return [
+            'title' => $movie->title,
+            'sinopsis' => $movie->sinopsis,
+            'out_date' => $movie->out_date,
+            'film_producer' => $movie->film_producer,
+            'public_directed' => $movie->public_directed,
+            'duration' => $movie->duration,
+            'image' => $movie->image,
+            'categories' => $categories,
+            'actors' => $actors,
+            'directors' => $directors,
+            'marks' => $marks,
+            'id' => $movie->id
+        ];
     }
 }
