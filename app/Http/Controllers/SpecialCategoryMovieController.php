@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\response;
+use Illuminate\Http\Response;
 use App\Movie;
 use App\Category;
 use App\Actor;
@@ -52,7 +52,7 @@ class SpecialCategoryMovieController extends Controller
         $directors = [];
 
 
-        foreach ($movie->categories as $category) {
+        foreach ($movie->categories_movies as $category) {
             array_push($categories, $category->name);
         }
         foreach ($movie->marks_movies as $mark) {
@@ -67,6 +67,7 @@ class SpecialCategoryMovieController extends Controller
 
 
         return [
+            'id' => $movie->id,
             'title' => $movie->title,
             'sinopsis' => $movie->sinopsis,
             'out_date' => $movie->out_date,
@@ -77,8 +78,7 @@ class SpecialCategoryMovieController extends Controller
             'categories' => $categories,
             'actors' => $actors,
             'directors' => $directors,
-            'marks' => $marks,
-            'id' => $movie->id
+            'marks' => $marks            
         ];
     }
 }
