@@ -84,7 +84,7 @@ class CategoryMovieController extends Controller
             'categories' => $categories,
             'actors' => $actors,
             'directors' => $directors,
-            'marks' => $marks            
+            'marks' => $marks
         ];
     }
 }
