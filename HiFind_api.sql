@@ -122,8 +122,8 @@ CREATE TABLE directors(
 
 CREATE TABLE actors(
     id                  int(255) auto_increment not null,
-    name	              varchar(255) not null,
-    surname             varchar(255),
+    name	              varchar(100) not null,
+    surname             varchar(100),
     birthday            varchar(255) DEFAULT NULL,
     biography           varchar(255),
     image               varchar(255),
