@@ -134,6 +134,9 @@ class GameController extends Controller
         foreach ($game->marks_games as $mark) {
             array_push($marks, $mark->pivot->mark);
         }
+        if (sizeof($marks) > 0) {
+            $marks = $this->array_half($marks);
+        }
         return [
             'name' => $game->name,
             'sinopsis' => $game->sinopsis,
@@ -199,5 +202,14 @@ class GameController extends Controller
             'message' => 'Game store successfull',
             'game' => $game
         ];
+    }
+
+    public function array_half($array)
+    {
+        $sum = 0;
+        foreach ($array as $iterator) {
+            $sum += $iterator;
+        }
+        return $sum / sizeof($array);
     }
 }

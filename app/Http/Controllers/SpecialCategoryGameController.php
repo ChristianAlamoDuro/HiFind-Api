@@ -14,7 +14,9 @@ class SpecialCategoryGameController extends Controller
     {
         $categories = Category::where($name, true)->get();
         if (!empty($categories)) {
-            $games=$this->build_game_response($categories);
+            $games = $this->build_game_response($categories);
+            $games = collect($games)->unique();
+            $games = $games->values()->all();
             $data = [
                 'code' => 200,
                 'status' => 'success',

@@ -18,6 +18,8 @@ class SpecialCategoryMovieController extends Controller
         
         if (!empty($categories)) {
             $movies=$this->build_movie_response($categories);
+            $movies = collect($movies)->unique();
+            $movies = $movies->values()->all();
             $data = [
                 'code' => 200,
                 'status' => 'success',
