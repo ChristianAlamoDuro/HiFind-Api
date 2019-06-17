@@ -204,14 +204,14 @@ class MovieController extends Controller
                 array_push($directors, $director);
             }
         }
-        $movie->directors_movies()->attach($directors);
+        $movie->directors_movies()->sync($directors);
 
         foreach ($params_array['actors'] as $actor) {
-            if (Actor::find($category)) {
+            if (Actor::find($actor)) {
                 array_push($actors, $actor);
             }
         }
-        $movie->actors_movies()->attach($actors);
+        $movie->actors_movies()->sync($actors);
 
         return [
             'code' => 200,
