@@ -15,10 +15,10 @@ class MarkGameController extends Controller
         $game_id = $params_array['game_id'];
         $user_id = $params_array['user_id'];
         $mark = $params_array['mark'];
-        if (empty(DB::select("select * from marks_users_movies where movie_id=$game_id and user_id=$user_id"))) {
-            $data = DB::insert("insert into marks_users_movies (movie_id,user_id,mark) values($game_id,$user_id,$mark)");
+        if (empty(DB::select("select * from marks_users_games where movie_id=$game_id and user_id=$user_id"))) {
+            $data = DB::insert("insert into marks_users_games (movie_id,user_id,mark) values($game_id,$user_id,$mark)");
         } else {
-            $data = DB::update("update marks_users_movies set mark=$mark where movie_id=$game_id and user_id=$user_id");
+            $data = DB::update("update marks_users_games set mark=$mark where movie_id=$game_id and user_id=$user_id");
         }
 
         $dataResponse = [
