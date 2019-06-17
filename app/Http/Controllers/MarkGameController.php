@@ -24,6 +24,7 @@ class MarkGameController extends Controller
         $dataResponse = [
             'code' => 200,
             'status' => 'success',
+            'data'=>$data
         ];
 
         return response()->json($dataResponse);
