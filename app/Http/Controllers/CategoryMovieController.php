@@ -17,7 +17,7 @@ class CategoryMovieController extends Controller
         if (count($categories)>0){
             foreach ($categories as $category) {
                 foreach ($category->movies as $movie) {
-                    array_push($movie, Movie::find($movie->id));
+                    array_push($movies, Movie::find($movie->id));
                 }
             }
             array_unique($movies);

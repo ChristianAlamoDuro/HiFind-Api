@@ -63,9 +63,9 @@ class MovieController extends Controller
         foreach ($movies as $movie) {
             array_push($data, $this->build_show_response($movie));
         }
-        
+
         $collection = collect($data);
-        $data = $collection->sortBy('name');
+        $data = $collection->sortBy('title');
         $data = $data->values()->all();
 
         $dataResponse = [
@@ -89,6 +89,9 @@ class MovieController extends Controller
             array_push($data, $this->build_show_response($movies));
         }
         if (!is_null($movies)) {
+            $collection = collect($data);
+            $data = $collection->sortBy('title');
+            $data = $data->values()->all();
             $dataResponse = [
                 'code' => 200,
                 'status' => 'success',
