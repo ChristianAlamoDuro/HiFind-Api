@@ -137,7 +137,7 @@ class GameController extends Controller
         if (sizeof($marks) > 0) {
             $marks = $this->array_half($marks);
         } else {
-            $marks = 0;
+            $marks = "N/A";
         }
         return [
             'name' => $game->name,

@@ -34,7 +34,7 @@ class MovieController extends Controller
         if (sizeof($marks) > 0) {
             $marks = $this->array_half($marks);
         } else {
-            $marks = 0;
+            $marks = "N/A";
         }
 
         foreach ($movie->directors_movies as $director) {
