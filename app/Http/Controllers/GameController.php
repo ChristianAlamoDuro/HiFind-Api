@@ -136,8 +136,8 @@ class GameController extends Controller
         }
         if (sizeof($marks) > 0) {
             $marks = $this->array_half($marks);
-        }else{
-            $marks=0;
+        } else {
+            $marks = 0;
         }
         return [
             'name' => $game->name,
@@ -212,6 +212,7 @@ class GameController extends Controller
         foreach ($array as $iterator) {
             $sum += $iterator;
         }
-        return $sum / sizeof($array);
+        $mark = $sum / sizeof($array);
+        return round($mark);
     }
 }

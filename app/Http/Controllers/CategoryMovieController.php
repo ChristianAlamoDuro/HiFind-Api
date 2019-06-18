@@ -100,6 +100,7 @@ class CategoryMovieController extends Controller
         foreach ($array as $iterator) {
             $sum += $iterator;
         }
-        return $sum / sizeof($array);
+        $mark = $sum / sizeof($array);
+        return round($mark);
     }
 }
