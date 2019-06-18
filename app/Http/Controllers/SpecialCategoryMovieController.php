@@ -60,6 +60,12 @@ class SpecialCategoryMovieController extends Controller
         foreach ($movie->marks_movies as $mark) {
             array_push($marks, $mark->pivot->mark);
         }
+        if (sizeof($marks) > 0) {
+            $marks = $this->array_half($marks);
+        } else {
+            $marks = 0;
+        }
+
         foreach ($movie->directors_movies as $director) {
             array_push($directors, $director->name);
         }
@@ -82,5 +88,13 @@ class SpecialCategoryMovieController extends Controller
             'directors' => $directors,
             'marks' => $marks            
         ];
+    }
+    public function array_half($array)
+    {
+        $sum = 0;
+        foreach ($array as $iterator) {
+            $sum += $iterator;
+        }
+        return $sum / sizeof($array);
     }
 }
